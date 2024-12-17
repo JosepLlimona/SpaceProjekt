@@ -38,23 +38,27 @@ public class ModuleSpawner : MonoBehaviour
             Vector3 down = new Vector3(pos.x, pos.y + 1, 0);
 
             int idx = shipPosition.IndexOf(left);
+            string position = "left";
             if(idx == -1)
             {
                 idx = shipPosition.IndexOf(right);
+                position = "right";
             }
             if (idx == -1)
             {
                 idx = shipPosition.IndexOf(up);
+                position = "up";
             }
             if (idx == -1)
             {
                 idx = shipPosition.IndexOf(down);
+                position = "down";
             }
 
             if (idx != -1)
             {
                 Debug.Log(idx);
-                return ship[idx].GetComponent<Module>().checkPlacment(module.GetComponent<Module>());
+                return ship[idx].GetComponent<Module>().checkPlacment(module.GetComponent<Module>(), position);
             }
             return false;
         }

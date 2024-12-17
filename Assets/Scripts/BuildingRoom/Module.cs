@@ -10,16 +10,16 @@ public class Module : MonoBehaviour
     public bool down = false;
     public bool left = false;
 
-    public bool checkPlacment(Module module)
+    public bool checkPlacment(Module module, string pos)
     {
-        if (up && module.down)
-            return true;
-        else if (right && module.left)
-            return true;
-        else if (left && module.right)
-            return true;
-        else if (down && module.up)
-            return true;
+        if(pos == "up")
+            return up && module.down;
+        else if(pos == "right")
+            return right && module.left;
+        else if(pos == "left")
+            return left && module.right;
+        else if (pos == "down")
+            return down && module.up;
         return false;
     }
 }
