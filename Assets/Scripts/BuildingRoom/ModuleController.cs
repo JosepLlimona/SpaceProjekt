@@ -6,12 +6,13 @@ public class ModuleController : MonoBehaviour
 {
 
     [SerializeField]
-    List<GameObject> modules = new List<GameObject>();
-    public List<Vector3> ship = new List<Vector3>();
-    // Start is called before the first frame update
-    void Start()
-    {
+    GameObject module;
 
+    GameObject moduleSpawner;
+
+    private void Awake()
+    {
+        moduleSpawner = GameObject.Find("ModuleSpawner");
     }
 
     // Update is called once per frame
@@ -23,7 +24,7 @@ public class ModuleController : MonoBehaviour
         mousePos.x = Mathf.RoundToInt(mousePos.x);
         transform.position = mousePos;
 
-        bool canPlace = checkPlacement(mousePos);
+        bool canPlace = moduleSpawner.GetComponent<ModuleSpawner>().checkPlacement(mousePos, module);
 
         if (canPlace)
         {
@@ -39,23 +40,8 @@ public class ModuleController : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0) && canPlace)
         {
-            ship.Add(Instantiate(modules[0], mousePos, Quaternion.identity).transform.position);
+            moduleSpawner.GetComponent<ModuleSpawner>().AddModule(module, mousePos);   
         }
 
-    }
-
-    private bool checkPlacement(Vector3 pos)
-    {
-        if (ship.Count <= 0)
-            return true;
-        else
-        {
-            Vector3 left = new Vector3(pos.x - 1, pos.y, 0);
-            Vector3 right = new Vector3(pos.x + 1, pos.y, 0);
-            Vector3 up = new Vector3(pos.x, pos.y - 1, 0);
-            Vector3 down = new Vector3(pos.x, pos.y + 1, 0);
-
-            return ship.Contains(left) || ship.Contains(right) || ship.Contains(down) || ship.Contains(up);
-        }
     }
 }
