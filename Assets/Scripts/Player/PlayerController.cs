@@ -12,11 +12,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashingPower = 24f;
     [SerializeField] float dashingTime = 0.2f;
     [SerializeField] float dashingCooldown = 1f;
+    [SerializeField] Animator inventoryAnim;
     Rigidbody2D rb;
     Vector2 dir = Vector2.zero;
     bool isRunning = false;
     bool canDash = true;
     bool isDashing = false;
+
+    [Header("Stats")]
+    [SerializeField] int health = 100;
+    [SerializeField] int maxHealth = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +57,6 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.Log("Canceled run");
                     speed = 5f;
-                    isRunning = false;
                 }
             }
         }
@@ -64,6 +68,18 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Performed dash");
             StartCoroutine(Dash());
+        }
+        if (isRunning)
+        {
+            isRunning = false;
+        }
+    }
+
+    public void OpenInventory(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            inventoryAnim.SetBool("IsInventory", !inventoryAnim.GetBool("IsInventory"));
         }
     }
 
@@ -84,5 +100,14 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+    }
+
+    public void Heal(int healing)
+    {
+        health += healing;
+        if(health >= maxHealth)
+        {
+            health = maxHealth;
+        }
     }
 }
