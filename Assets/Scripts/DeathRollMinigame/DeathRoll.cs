@@ -16,7 +16,6 @@ public class DeathRoll : MonoBehaviour
     [SerializeField]
     private Button rollButton;
 
-    private int MaxNumber = 1000;
     private int currentMax = 1000;
     private bool canRoll = true;
     public void Roll()
@@ -80,5 +79,16 @@ public class DeathRoll : MonoBehaviour
             rollButton.interactable = true;
         }
 
+    }
+
+    public void reset()
+    {
+        StopAllCoroutines();
+        currentMax = 1000;
+        winnerText.text = "";
+        actionList.text = "";
+        rollNum.text = "1-1000";
+        canRoll = true;
+        rollButton.interactable = true;
     }
 }
