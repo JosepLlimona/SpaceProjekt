@@ -23,9 +23,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int health = 100;
     [SerializeField] int maxHealth = 100;
 
+    [Header("Combat")]
+    bool isCovered = false;
+    [SerializeField] GameObject bullet;
+    [SerializeField] bool canShoot;
+    [SerializeField] bool canMele;
+    [SerializeField] GameObject bulletSpawn;
+    [SerializeField] GameObject bulletPivot;
+    [SerializeField] GameObject sword;
+    Vector2 mousePos;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        isCovered = false;
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -38,16 +50,26 @@ public class PlayerController : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         dir = context.ReadValue<Vector2>();
-        Debug.Log(dir);
     }
 
+    public void Look(InputAction.CallbackContext context)
+    {
+        mousePos = Camera.main.ScreenToWorldPoint(context.ReadValue<Vector2>());
+
+        float lookAngle = AngleBetweenTwoPoints(bulletPivot.transform.position, mousePos) + 90;
+        bulletPivot.transform.eulerAngles = new Vector3(0, 0, lookAngle);
+        sword.transform.eulerAngles = new Vector3(0, 0, lookAngle);
+    }
+    private float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
+    {
+        return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
+    }
     public void Run(InputAction.CallbackContext context)
     {
         if (canRun)
         {
             if (context.performed)
             {
-                Debug.Log("Started run");
                 speed = 10f;
                 isRunning = true;
             }
@@ -55,8 +77,44 @@ public class PlayerController : MonoBehaviour
             {
                 if (isRunning)
                 {
-                    Debug.Log("Canceled run");
                     speed = 5f;
+                }
+            }
+        }
+    }
+
+    public void Attack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (canShoot && canMele)
+            {
+                Debug.LogError("Ets burro, nomes pots tenir un tipus d'atac");
+                return;
+            }
+            if (canShoot)
+            {
+                GameObject tmpBullet = Instantiate(bullet, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+                Vector2 dir = (mousePos - (Vector2)bulletSpawn.transform.position).normalized;
+                tmpBullet.GetComponent<BulletController>().dir = dir;
+            }
+            else if (canMele)
+            {
+                Vector2 direction = mousePos - (Vector2)transform.transform.position;
+
+                if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+                {
+                    if (direction.x > 0)
+                        sword.GetComponent<Animator>().SetTrigger("AttackRight");
+                    else
+                        sword.GetComponent<Animator>().SetTrigger("AttackLeft");
+                }
+                else
+                {
+                    if (direction.y > 0)
+                        sword.GetComponent<Animator>().SetTrigger("Attack");
+                    else
+                        sword.GetComponent<Animator>().SetTrigger("AttackDown");
                 }
             }
         }
@@ -66,7 +124,6 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed && !isRunning && canDash)
         {
-            Debug.Log("Performed dash");
             StartCoroutine(Dash());
         }
         if (isRunning)
@@ -87,6 +144,7 @@ public class PlayerController : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
+        gameObject.layer = 7;
 
         if (dir != Vector2.zero)
         {
@@ -100,14 +158,35 @@ public class PlayerController : MonoBehaviour
         isDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
         canDash = true;
+        gameObject.layer = 0;
     }
 
     public void Heal(int healing)
     {
         health += healing;
-        if(health >= maxHealth)
+        if (health >= maxHealth)
         {
             health = maxHealth;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Cover")
+        {
+            Debug.Log("Entro");
+            isCovered = true;
+            transform.localScale = new Vector3(1f, 0.8f, 1f);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Cover")
+        {
+            isCovered = false;
+            transform.localScale = new Vector3(1f, 1f, 1f);
+
         }
     }
 }

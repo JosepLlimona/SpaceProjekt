@@ -1,0 +1,7 @@
+Aixo es un test de prova,C,1
+el seguent son opcions,O,2
+Opció 1[Check],4-6,MC
+Opció 2,5,F
+Dialg Opcio 1 Correcte,F,0
+Dialeg Opcio 2,F,0
+Dialeg Opcio 1 Failed,F,0
