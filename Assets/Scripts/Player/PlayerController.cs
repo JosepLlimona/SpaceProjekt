@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,16 +23,19 @@ public class PlayerController : MonoBehaviour
     [Header("Stats")]
     [SerializeField] int health = 100;
     [SerializeField] int maxHealth = 100;
+    [SerializeField] Slider healthBar;
 
-    [Header("Combat")]
     bool isCovered = false;
+    [Header("Combat")]
     [SerializeField] GameObject bullet;
     [SerializeField] bool canShoot;
     [SerializeField] bool canMele;
     [SerializeField] GameObject bulletSpawn;
     [SerializeField] GameObject bulletPivot;
     [SerializeField] GameObject sword;
+    [SerializeField] float shootTime = 0.5f;
     Vector2 mousePos;
+
 
 
     // Start is called before the first frame update
@@ -94,9 +98,7 @@ public class PlayerController : MonoBehaviour
             }
             if (canShoot)
             {
-                GameObject tmpBullet = Instantiate(bullet, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
-                Vector2 dir = (mousePos - (Vector2)bulletSpawn.transform.position).normalized;
-                tmpBullet.GetComponent<BulletController>().dir = dir;
+                StartCoroutine(Shoot());
             }
             else if (canMele)
             {
@@ -118,6 +120,16 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private IEnumerator Shoot()
+    {
+        canShoot = false;
+        GameObject tmpBullet = Instantiate(bullet, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
+        Vector2 dir = (mousePos - (Vector2)bulletSpawn.transform.position).normalized;
+        tmpBullet.GetComponent<BulletController>().dir = dir;
+        yield return new WaitForSeconds(shootTime);
+        canShoot = true;
     }
 
     public void Dash(InputAction.CallbackContext context)
@@ -168,6 +180,7 @@ public class PlayerController : MonoBehaviour
         {
             health = maxHealth;
         }
+        healthBar.value = health;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -178,6 +191,22 @@ public class PlayerController : MonoBehaviour
             isCovered = true;
             transform.localScale = new Vector3(1f, 0.8f, 1f);
         }
+
+        if(collision.tag == "EnemyBullet")
+        {
+
+        }
+    }
+
+    private void LoseHealth(int amountLost)
+    {
+        health -= amountLost;
+        healthBar.value = health;
+        if (health <= 0)
+        {
+            //GAME OVER
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)

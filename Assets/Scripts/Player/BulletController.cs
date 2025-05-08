@@ -13,11 +13,26 @@ public class BulletController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        StartCoroutine(destroyBullet());
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         rb.velocity = dir * speed;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Enemy")
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private IEnumerator destroyBullet()
+    {
+        yield return new WaitForSeconds(5f);
+        Destroy(gameObject);
     }
 }
