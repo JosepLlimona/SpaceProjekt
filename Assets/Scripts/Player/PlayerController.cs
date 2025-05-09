@@ -194,7 +194,7 @@ public class PlayerController : MonoBehaviour
 
         if(collision.tag == "EnemyBullet")
         {
-
+            LoseHealth(10);
         }
     }
 
