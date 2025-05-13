@@ -200,6 +200,8 @@ public class PlayerController : MonoBehaviour
 
     private void LoseHealth(int amountLost)
     {
+        if (/*isCovered || isDashing*/ true)
+            return;
         health -= amountLost;
         healthBar.value = health;
         if (health <= 0)

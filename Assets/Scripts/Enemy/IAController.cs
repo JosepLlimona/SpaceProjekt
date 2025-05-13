@@ -7,7 +7,7 @@ public class IAController : MonoBehaviour
 {
     private List<EnemyController> enemies = new List<EnemyController>();
     private List<GameObject> covers = new List<GameObject>();
-    private List<bool> availableCovers = new List<bool>();
+    public List<bool> availableCovers = new List<bool>();
 
     // Start is called before the first frame update
     void Awake()
@@ -19,6 +19,14 @@ public class IAController : MonoBehaviour
             availableCovers.Add(false);
         }
         Debug.Log("Nº Covers: " + covers.Count);
+    }
+
+    public void StartCombat()
+    {
+        for (int i = 0; i<enemies.Count; i++)
+        {
+            enemies[i].StartHostile();
+        }
     }
 
     public void AddEnemy(EnemyController enemy)
@@ -35,14 +43,14 @@ public class IAController : MonoBehaviour
             EnemyController tmp = enemies[0];
             enemies.RemoveAt(0);
             enemies.Add(tmp);
-            Debug.Log("Finished turn and rotated list.");
+            Debug.Log(enemy.gameObject.name + ": Finished turn and rotated list.");
         }
     }
 
     public bool AskToAct(EnemyController enemy)
     {
         Debug.Log("Pregunta: " + enemy.gameObject.name + ", Primer llista: " + enemies[0].gameObject.name);
-        if(enemy == enemies[0])
+        if (enemy == enemies[0])
         {
             return true;
         }
@@ -54,19 +62,19 @@ public class IAController : MonoBehaviour
 
     public EnemyActions AskAction(EnemyActions actualAction)
     {
-        if(actualAction == EnemyActions.GettingCover)
+        if (actualAction == EnemyActions.GettingCover)
         {
             return EnemyActions.Attacking;
         }
-        else if(actualAction == EnemyActions.Attacking)
+        else if (actualAction == EnemyActions.Attacking)
         {
             return EnemyActions.WaitBAttack;
         }
-        else if(actualAction == EnemyActions.Wait)
+        else if (actualAction == EnemyActions.Wait)
         {
             return EnemyActions.GettingCover;
         }
-        else if(actualAction == EnemyActions.WaitBAttack)
+        else if (actualAction == EnemyActions.WaitBAttack)
         {
             return EnemyActions.Attacking;
         }
@@ -80,7 +88,7 @@ public class IAController : MonoBehaviour
     {
         if (covers.Count <= 0)
             return null;
-        for(int i = 0; i < covers.Count; i++)
+        for (int i = 0; i < covers.Count; i++)
         {
             if (!availableCovers[i])
             {
@@ -92,13 +100,38 @@ public class IAController : MonoBehaviour
         return null;
     }
 
-    private IEnumerator Wait()
+    public void VacateCover(GameObject cover)
     {
-        Debug.Log("Canviant order");
-        yield return new WaitForSeconds(0.5f);
-        EnemyController tmp = enemies[0];
-        enemies.RemoveAt(0);
-        enemies.Add(tmp);
-        Debug.Log("Canviat");
+        for (int i = 0; i < covers.Count; i++)
+        {
+            if (cover == covers[i])
+            {
+                availableCovers[i] = false;
+            }
+        }
+    }
+
+    public bool AskIfAbailableCover()
+    {
+        for (int i = 0; i < covers.Count; i++)
+        {
+            if (!availableCovers[i])
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void DestoryEnemy(EnemyController enemy)
+    {
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (enemy == enemies[i])
+            {
+                enemies.RemoveAt(i);
+                return;
+            }
+        }
     }
 }

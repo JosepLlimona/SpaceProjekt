@@ -23,7 +23,9 @@ public class EnemyController : MonoBehaviour
     EnemyActions actual = EnemyActions.Wait;
     bool isMoving = false;
     bool isAttacking = false;
+    bool isCovered = false;
     Vector3 coverPos;
+    GameObject coverObject;
     Vector2 last = Vector2.zero;
 
 
@@ -34,6 +36,11 @@ public class EnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         iaController = GameObject.Find("IAController").GetComponent<IAController>();
         iaController.AddEnemy(this);
+    }
+
+
+    public void StartHostile()
+    {
         StartCoroutine(KnowAction());
     }
 
@@ -45,11 +52,33 @@ public class EnemyController : MonoBehaviour
             rb.MovePosition(movePos);
             if (movePos == last)
             {
-                isMoving = false;
-                StartCoroutine(KnowAction());
                 Debug.Log(gameObject.name + ": He arribat");
+                isMoving = false;
+                isCovered = true;
+                transform.localScale = new Vector3(1f, 0.8f, 1f);
+                StartCoroutine(KnowAction());
             }
             last = movePos;
+        }
+
+        if (isCovered)
+        {
+            GameObject player = GameObject.Find("Player");
+
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, player.transform.position - transform.position);
+            Debug.DrawRay(transform.position, player.transform.position - transform.position);
+            if (hit.transform.tag == "Player")
+            {
+                bool canChange = iaController.AskIfAbailableCover();
+                if (canChange)
+                {
+                    StopAllCoroutines();
+                    actual = EnemyActions.Wait;
+                    iaController.VacateCover(coverObject);
+                    StartCoroutine(KnowAction());
+                }
+                else { isCovered = false; }
+            }
         }
     }
 
@@ -79,14 +108,18 @@ public class EnemyController : MonoBehaviour
         if (isMoving)
             yield break;
         if (actual == EnemyActions.Wait)
-            yield break;
+        {
+            yield return new WaitForSeconds(5f);
+            StartCoroutine(KnowAction());
+        }
         else if (actual == EnemyActions.GettingCover && !isMoving)
         {
-            GameObject coverObject = iaController.AskCover();
-            Debug.Log(gameObject.name + ": Covrint a " + coverObject.name); 
+            coverObject = iaController.AskCover();
             if (coverObject == null)
             {
+                Debug.Log(gameObject.name + ": Sense covertura");
                 actual = EnemyActions.Wait;
+                iaController.FinishTurn(this);
                 yield break;
             }
             isMoving = true;
@@ -101,7 +134,6 @@ public class EnemyController : MonoBehaviour
         {
             Debug.Log(gameObject.name + ": Esperant despres d'atacar");
             yield return new WaitForSeconds(5f);
-            iaController.FinishTurn(this);
             StartCoroutine(KnowAction());
             Debug.Log(gameObject.name + ": Vaig a preguntar");
         }
@@ -124,6 +156,8 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator Attack()
     {
+        isCovered = false;
+        transform.localScale = new Vector3(1f, 1f, 1f);
         Vector2 bulletSpawn = transform.position;
         GameObject player = GameObject.Find("Player");
         if ((player.transform.position.y - transform.position.y) < 0)
@@ -138,9 +172,11 @@ public class EnemyController : MonoBehaviour
         GameObject tmpBullet = Instantiate(bullet, bulletSpawn, Quaternion.identity);
         Vector2 dir = (player.transform.position - this.transform.position).normalized;
         tmpBullet.GetComponent<BulletController>().dir = dir;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         isAttacking = false;
         iaController.FinishTurn(this);
+        isCovered = true;
+        transform.localScale = new Vector3(1f, 0.8f, 1f);
         StartCoroutine(KnowAction());
     }
 
@@ -154,11 +190,15 @@ public class EnemyController : MonoBehaviour
 
     private void LoseHealth(int amountLost)
     {
+        if (isCovered)
+            return;
         Debug.Log(gameObject.name + ": Lossing Health");
         health -= amountLost;
         healthBar.value = health;
         if (health <= 0)
         {
+            iaController.VacateCover(coverObject);
+            iaController.DestoryEnemy(this);
             Destroy(gameObject);
         }
     }
