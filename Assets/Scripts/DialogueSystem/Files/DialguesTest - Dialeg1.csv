@@ -1,0 +1,20 @@
+Aixo es un test de prova,C,1
+el seguent son opcions,O,2
+Opció 1[Check],10-13,MCH
+Opció 2,11,M
+Opcio diners,13,M
+Opcio botiga,14,M
+Opcio minijoc,15,M
+Opcio combat,16,M
+Opcio Objecte,17,M
+Opcio comprar [100],18-19,FB-100
+Dialg Opcio 1 Correcte,F,0
+Dialeg Opcio 2,F,0
+Dialeg Opcio 1 Failed,F,0
+Obtenint diners,F,100
+Obrint botiga,F,-1
+Obrint minijoc,F,-2
+Iniciant combat,F,-3
+Obtenint objecte,F,-4
+No tens diners,F,0
+Perfecte,F,-4

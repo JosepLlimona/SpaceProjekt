@@ -8,6 +8,7 @@ public class BulletController : MonoBehaviour
     Rigidbody2D rb;
     float speed = 5f;
     public Vector2 dir;
+    float damage = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -34,5 +35,20 @@ public class BulletController : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
         Destroy(gameObject);
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public float GetDamage()
+    {
+        return damage;
+    }
+
+    public void SetDamage(float damage)
+    {
+        this.damage = damage;
     }
 }

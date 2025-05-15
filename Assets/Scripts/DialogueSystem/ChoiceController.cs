@@ -15,6 +15,7 @@ public class ChoiceController : MonoBehaviour, IPointerEnterHandler,IPointerExit
     public string nextLine;
     public DialogueController dialogueController;
     public bool hasCheck = false;
+    public bool hasToPay = false;
 
     private void Start()
     {
@@ -36,6 +37,6 @@ public class ChoiceController : MonoBehaviour, IPointerEnterHandler,IPointerExit
     public void Choose()
     {
         Debug.Log("Entro");
-        dialogueController.ChooseOption(nextLine, hasCheck);
+        dialogueController.ChooseOption(nextLine, hasCheck, hasToPay);
     }
 }

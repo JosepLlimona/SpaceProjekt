@@ -19,9 +19,14 @@ public class DialogueController : MonoBehaviour
     [SerializeField]
     TextAsset dialogueFile;
 
+    [SerializeField]
+    PlayerController player;
+
     bool canContinue = false;
     int i;
     public bool hasDecided = false;
+    int choiceDificulty = 0; // 1 = Facil, 2 = Mitj, 3 = Dificil
+    int price = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -63,8 +68,34 @@ public class DialogueController : MonoBehaviour
                     yield return StartCoroutine(ManageChoices(script));
                     break;
                 case "F":
-                    Debug.Log("Final del dialeg");
-                    yield break;
+                    i++;
+                    int ending = int.Parse(script[i]);
+                    if (ending == 0)
+                    {
+                        Debug.Log("Final del dialeg");
+                    }
+                    else if(ending > 0)
+                    {
+                        Debug.Log("Guanayt: " + ending);
+                    }
+                    else if(ending == -1)
+                    {
+                        Debug.Log("Entrant botiga");
+                    }
+                    else if (ending == -2)
+                    {
+                        Debug.Log("Entrant minijoc");
+                    }
+                    else if(ending == -3)
+                    {
+                        Debug.Log("Iniciant combat");
+                    }
+                    else if(ending == -4)
+                    {
+                        Debug.Log("Conseguint objecte");
+                    }
+
+                        yield break;
                 default:
                     Debug.Log(script[i]);
                     break;
@@ -93,13 +124,51 @@ public class DialogueController : MonoBehaviour
             {
                 isInChoices = false;
             }
-            else if (script[i] == "MC")
+            else if (script[i] == "MCF")
             {
                 choiceTmp.GetComponent<ChoiceController>().hasCheck = true;
+                choiceDificulty = 1;
             }
-            else if (script[i] == "FC")
+            else if (script[i] == "MCM")
             {
                 choiceTmp.GetComponent<ChoiceController>().hasCheck = true;
+                choiceDificulty = 2;
+            }
+            else if (script[i] == "MCH")
+            {
+                choiceTmp.GetComponent<ChoiceController>().hasCheck = true;
+                choiceDificulty = 3;
+            }
+            else if (script[i] == "FCF")
+            {
+                choiceTmp.GetComponent<ChoiceController>().hasCheck = true;
+                isInChoices = false;
+                choiceDificulty = 1;
+            }
+            else if (script[i] == "FCM")
+            {
+                choiceTmp.GetComponent<ChoiceController>().hasCheck = true;
+                isInChoices = false;
+                choiceDificulty = 1;
+            }
+            else if (script[i] == "FCH")
+            {
+                choiceTmp.GetComponent<ChoiceController>().hasCheck = true;
+                isInChoices = false;
+                choiceDificulty = 1;
+            }
+            else if (script[i].Contains("MB")){
+                string[] separator = script[i].Split('-');
+                price = int.Parse(separator[1]);
+                Debug.Log("Preu: " + price);
+                choiceTmp.GetComponent<ChoiceController>().hasToPay = true;
+            }
+            else if (script[i].Contains("FB"))
+            {
+                string[] separator = script[i].Split('-');
+                price = int.Parse(separator[1]);
+                Debug.Log("Preu: " + price);
+                choiceTmp.GetComponent<ChoiceController>().hasToPay = true;
                 isInChoices = false;
             }
             i++;
@@ -113,14 +182,35 @@ public class DialogueController : MonoBehaviour
         textSquare.gameObject.SetActive(true);
     }
 
-    public void ChooseOption(string nextLine, bool hasCheck)
+    public void ChooseOption(string nextLine, bool hasCheck, bool hasToPay)
     {
         hasDecided = true;
         if (hasCheck)
         {
-            /*TODO Check system*/
+            int charMod;
+            if (choiceDificulty == 1)
+            {
+                charMod = player.GetCharMod() * 3;
+            }
+            else if (choiceDificulty == 2)
+            {
+                charMod = player.GetCharMod() * 2;
+            }
+            else
+            {
+                charMod = player.GetCharMod();
+            }
+            if (charMod <= 0)
+            {
+                charMod = 0;
+            }
+            int maxRand = 12 - charMod;
+            if (maxRand <= 0)
+                maxRand = 1;
             string[] next = nextLine.Split('-');
-            int rand = Random.Range(1, 10);
+            int rand = Random.Range(1, maxRand);
+
+
             if (rand == 1)
             {
                 i = (int.Parse(next[0]) * 3) - 1;
@@ -128,6 +218,18 @@ public class DialogueController : MonoBehaviour
             else if (rand > 1)
             {
                 i = (int.Parse(next[1]) * 3) - 1;
+            }
+        }
+        else if (hasToPay)
+        {
+            string[] next = nextLine.Split('-');
+            if(player.money >= price)
+            {
+                i = (int.Parse(next[1]) * 3) - 1;
+            }
+            else
+            {
+                i = (int.Parse(next[0]) * 3) - 1;
             }
         }
         else

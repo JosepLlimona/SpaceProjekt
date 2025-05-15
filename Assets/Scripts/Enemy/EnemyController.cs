@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
 
     [Header("Stats")]
     [SerializeField]
-    int health = 100;
+    float health = 10;
 
     [Header("Objects")]
     [SerializeField]
@@ -32,10 +32,10 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(gameObject.name + " Iniciant");
         rb = GetComponent<Rigidbody2D>();
         iaController = GameObject.Find("IAController").GetComponent<IAController>();
         iaController.AddEnemy(this);
+        healthBar.maxValue = health;
     }
 
 
@@ -52,7 +52,6 @@ public class EnemyController : MonoBehaviour
             rb.MovePosition(movePos);
             if (movePos == last)
             {
-                Debug.Log(gameObject.name + ": He arribat");
                 isMoving = false;
                 isCovered = true;
                 transform.localScale = new Vector3(1f, 0.8f, 1f);
@@ -66,7 +65,6 @@ public class EnemyController : MonoBehaviour
             GameObject player = GameObject.Find("Player");
 
             RaycastHit2D hit = Physics2D.Raycast(transform.position, player.transform.position - transform.position);
-            Debug.DrawRay(transform.position, player.transform.position - transform.position);
             if (hit.transform.tag == "Player")
             {
                 bool canChange = iaController.AskIfAbailableCover();
@@ -84,21 +82,18 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator KnowAction()
     {
-        Debug.Log(gameObject.name + ": Preguntant");
         if (actual == EnemyActions.Wait || actual == EnemyActions.WaitBAttack)
         {
             canAct = iaController.AskToAct(this);
         }
         if (!canAct)
         {
-            Debug.Log(gameObject.name + ": No actuo");
             yield return new WaitForSeconds(2f);
             StartCoroutine(KnowAction());
         }
         else
         {
             actual = iaController.AskAction(actual);
-            Debug.Log(gameObject.name + ": Actuant = " + actual);
         }
         yield return StartCoroutine(Act());
     }
@@ -117,7 +112,6 @@ public class EnemyController : MonoBehaviour
             coverObject = iaController.AskCover();
             if (coverObject == null)
             {
-                Debug.Log(gameObject.name + ": Sense covertura");
                 actual = EnemyActions.Wait;
                 iaController.FinishTurn(this);
                 yield break;
@@ -132,10 +126,8 @@ public class EnemyController : MonoBehaviour
         }
         else if (actual == EnemyActions.WaitBAttack)
         {
-            Debug.Log(gameObject.name + ": Esperant despres d'atacar");
             yield return new WaitForSeconds(5f);
             StartCoroutine(KnowAction());
-            Debug.Log(gameObject.name + ": Vaig a preguntar");
         }
     }
 
@@ -182,17 +174,23 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Sword" || collision.tag == "Bullet")
+        if (collision.tag == "Bullet")
         {
-            LoseHealth(10);
+            float damage = collision.GetComponent<BulletController>().GetDamage();
+            LoseHealth(damage);
+        }
+        else if(collision.tag == "Sword")
+        {
+            float damage = collision.GetComponent<SwordController>().GetDamage();
+            LoseHealth(damage);
         }
     }
 
-    private void LoseHealth(int amountLost)
+    private void LoseHealth(float amountLost)
     {
         if (isCovered)
             return;
-        Debug.Log(gameObject.name + ": Lossing Health");
+        Debug.Log(gameObject.name + ": Lossing Health: " + amountLost);
         health -= amountLost;
         healthBar.value = health;
         if (health <= 0)

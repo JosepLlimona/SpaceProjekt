@@ -24,6 +24,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int health = 100;
     [SerializeField] int maxHealth = 100;
     [SerializeField] Slider healthBar;
+    [SerializeField] int strenght = 10;
+    [SerializeField] int dexterity = 10;
+    [SerializeField] int constitution = 10;
+    [SerializeField] int inteligence = 10; // Ni polles per a que utilitzar-ho
+    [SerializeField] int charisma = 10;
+    [SerializeField] int luck = 10;
 
     bool isCovered = false;
     [Header("Combat")]
@@ -34,7 +40,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject bulletPivot;
     [SerializeField] GameObject sword;
     [SerializeField] float shootTime = 0.5f;
+    [SerializeField] SwordController swordController;
+    float weaponDamage = 1f;
     Vector2 mousePos;
+
+    public int money = 0;
 
 
 
@@ -43,6 +53,16 @@ public class PlayerController : MonoBehaviour
     {
         isCovered = false;
         rb = GetComponent<Rigidbody2D>();
+        shootTime = 0.5f - GetModifier(dexterity) / 20;
+        if(shootTime <= 0)
+        {
+            shootTime = 0.1f;
+        }
+
+        maxHealth = 10 + GetModifier(constitution);
+        health = maxHealth;
+        healthBar .maxValue = maxHealth;
+        healthBar.value = health;
     }
 
     private void FixedUpdate()
@@ -102,6 +122,19 @@ public class PlayerController : MonoBehaviour
             }
             else if (canMele)
             {
+                int luckMod = GetModifier(luck);
+                int rand = Random.Range(1, 10);
+                float finalDamage = weaponDamage;
+                finalDamage += GetModifier(strenght) / 2; // Afegeix modificador de destresa
+                if (rand <= (2 + luckMod)) // 20% + modificador de sort per probabilitat de critic
+                {
+                    finalDamage *= 2; // Critic x2
+                }
+                if(finalDamage <= 0 )
+                {
+                    finalDamage = 0.5f;
+                }
+                swordController.SetDamage(finalDamage);
                 Vector2 direction = mousePos - (Vector2)transform.transform.position;
 
                 if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
@@ -124,10 +157,24 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator Shoot()
     {
+        int luckMod = GetModifier(luck);
+        int rand = Random.Range(1, 10);
+        float finalDamage = weaponDamage;
+        finalDamage += GetModifier(dexterity) / 2; // Afegeix modificador de destresa
+        if (rand <= (2 + luckMod)) // 20% + modificador de sort per probabilitat de critic
+        {
+            finalDamage *= 2; // Critic x2
+        }
+        if (finalDamage <= 0)
+        {
+            finalDamage = 0.5f;
+        }
         canShoot = false;
         GameObject tmpBullet = Instantiate(bullet, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
         Vector2 dir = (mousePos - (Vector2)bulletSpawn.transform.position).normalized;
         tmpBullet.GetComponent<BulletController>().dir = dir;
+        Debug.Log("Final Damage: " + finalDamage);
+        tmpBullet.GetComponent<BulletController>().SetDamage(finalDamage);
         yield return new WaitForSeconds(shootTime);
         canShoot = true;
     }
@@ -192,15 +239,15 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(1f, 0.8f, 1f);
         }
 
-        if(collision.tag == "EnemyBullet")
+        if (collision.tag == "EnemyBullet")
         {
-            LoseHealth(10);
+            LoseHealth(1);
         }
     }
 
     private void LoseHealth(int amountLost)
     {
-        if (/*isCovered || isDashing*/ true)
+        if (isCovered || isDashing)
             return;
         health -= amountLost;
         healthBar.value = health;
@@ -219,5 +266,15 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(1f, 1f, 1f);
 
         }
+    }
+
+    private int GetModifier(int stat)
+    {
+        return (stat - 10);
+    }
+
+    public int GetCharMod()
+    {
+        return GetModifier(charisma);
     }
 }
