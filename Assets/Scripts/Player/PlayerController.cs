@@ -21,8 +21,8 @@ public class PlayerController : MonoBehaviour
     bool isDashing = false;
 
     [Header("Stats")]
-    [SerializeField] int health = 100;
-    [SerializeField] int maxHealth = 100;
+    [SerializeField] float health = 10;
+    [SerializeField] int maxHealth = 10;
     [SerializeField] Slider healthBar;
     [SerializeField] int strenght = 10;
     [SerializeField] int dexterity = 10;
@@ -34,8 +34,8 @@ public class PlayerController : MonoBehaviour
     bool isCovered = false;
     [Header("Combat")]
     [SerializeField] GameObject bullet;
-    [SerializeField] bool canShoot;
-    [SerializeField] bool canMele;
+    [SerializeField] bool canShoot = false;
+    [SerializeField] bool canMele = false;
     [SerializeField] GameObject bulletSpawn;
     [SerializeField] GameObject bulletPivot;
     [SerializeField] GameObject sword;
@@ -43,8 +43,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] SwordController swordController;
     float weaponDamage = 1f;
     Vector2 mousePos;
+    public float defense = 0;
 
     public int money = 0;
+
+    bool canTalk = false;
+    NPCController npc;
+    public bool isTalking = false;
+
+    [Header("Miscellaneous")]
+    [SerializeField]
+    InventoryController inventory;
+    bool canAct = true;
 
 
 
@@ -63,12 +73,23 @@ public class PlayerController : MonoBehaviour
         health = maxHealth;
         healthBar .maxValue = maxHealth;
         healthBar.value = health;
+
+        if(inventory == null)
+        {
+            inventory = GameObject.Find("Inventory").GetComponent<InventoryController>();
+        }
+
+        inventory.changeMoneyAmount(money);
+        inventory.player = this;
     }
 
     private void FixedUpdate()
     {
-        if (isDashing) { return; }
-        rb.velocity = dir * speed;
+        if (canAct)
+        {
+            if (isDashing) { return; }
+            rb.velocity = dir * speed;
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -90,7 +111,7 @@ public class PlayerController : MonoBehaviour
     }
     public void Run(InputAction.CallbackContext context)
     {
-        if (canRun)
+        if (canRun && canAct)
         {
             if (context.performed)
             {
@@ -109,7 +130,7 @@ public class PlayerController : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !isTalking && canAct)
         {
             if (canShoot && canMele)
             {
@@ -181,7 +202,7 @@ public class PlayerController : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if (context.performed && !isRunning && canDash)
+        if (context.performed && !isRunning && canDash && canAct)
         {
             StartCoroutine(Dash());
         }
@@ -196,6 +217,17 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             inventoryAnim.SetBool("IsInventory", !inventoryAnim.GetBool("IsInventory"));
+            canAct = !canAct;
+        }
+    }
+
+    public void Talk(InputAction.CallbackContext context)
+    {
+        if(context.performed && canTalk)
+        {
+            isTalking = true;
+            Debug.Log("Estic parlant");
+            npc.StartConversation();
         }
     }
 
@@ -243,13 +275,19 @@ public class PlayerController : MonoBehaviour
         {
             LoseHealth(1);
         }
+
+        if(collision.tag == "NPC")
+        {
+            canTalk = true;
+            npc = collision.GetComponent<NPCController>();
+        }
     }
 
     private void LoseHealth(int amountLost)
     {
         if (isCovered || isDashing)
             return;
-        health -= amountLost;
+        health -= (amountLost - defense);
         healthBar.value = health;
         if (health <= 0)
         {
@@ -266,6 +304,11 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector3(1f, 1f, 1f);
 
         }
+
+        if(collision.tag == "NPC")
+        {
+            canTalk = false;
+        }
     }
 
     private int GetModifier(int stat)
@@ -276,5 +319,42 @@ public class PlayerController : MonoBehaviour
     public int GetCharMod()
     {
         return GetModifier(charisma);
+    }
+
+    public void GainMoney(int amount)
+    {
+        money += amount;
+        inventory.changeMoneyAmount(money);
+    }
+
+    public void looseMoney(int amount)
+    {
+        money -= amount;
+        inventory.changeMoneyAmount(money);
+    }
+
+    public void EquipWeapon(string type, float damage)
+    {
+        if(type == "Sword")
+        {
+            canMele = true;
+        }
+        else if(type == "Gun")
+        {
+            canShoot = true;
+        }
+        weaponDamage = damage;
+    }
+
+    public void UnequipWeapon()
+    {
+        canMele = false;
+        canShoot = false;
+    }
+
+    public void changeDefense(float amount)
+    {
+        defense += amount;
+        Debug.Log("Defensa: " + defense);
     }
 }

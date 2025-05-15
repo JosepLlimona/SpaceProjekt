@@ -2,7 +2,7 @@
 - Project name: SpaceProjekt
 - Unity version: Unity 2022.3.47f1
 - Active game object:
-  - Name: Player
-  - Tag: Player
-  - Layer: Default
+  - Name: Inventory
+  - Tag: Untagged
+  - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

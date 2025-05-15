@@ -16,11 +16,12 @@ public class DialogueController : MonoBehaviour
     [SerializeField]
     GameObject choiceBox;
 
-    [SerializeField]
-    TextAsset dialogueFile;
+    public TextAsset dialogueFile;
 
     [SerializeField]
     PlayerController player;
+    [SerializeField]
+    Animator animator;
 
     bool canContinue = false;
     int i;
@@ -28,9 +29,19 @@ public class DialogueController : MonoBehaviour
     int choiceDificulty = 0; // 1 = Facil, 2 = Mitj, 3 = Dificil
     int price = 0;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        if(player == null)
+        {
+            Debug.Log("Buscant player");
+            GameObject.Find("Player").GetComponent<PlayerController>();
+        }
+    }
+
+    // Start is called before the first frame update
+    public void StartDialog()
+    {
+        animator.SetBool("IsInDialog", true);
         if (dialogueFile == null)
         {
             Debug.LogError("No has ficat un arxiu");
@@ -77,6 +88,7 @@ public class DialogueController : MonoBehaviour
                     else if(ending > 0)
                     {
                         Debug.Log("Guanayt: " + ending);
+                        player.GainMoney(ending);
                     }
                     else if(ending == -1)
                     {
@@ -94,8 +106,10 @@ public class DialogueController : MonoBehaviour
                     {
                         Debug.Log("Conseguint objecte");
                     }
+                    animator.SetBool("IsInDialog", false);
+                    player.isTalking = false;
 
-                        yield break;
+                    yield break;
                 default:
                     Debug.Log(script[i]);
                     break;
@@ -226,6 +240,7 @@ public class DialogueController : MonoBehaviour
             if(player.money >= price)
             {
                 i = (int.Parse(next[1]) * 3) - 1;
+                player.looseMoney(price);
             }
             else
             {

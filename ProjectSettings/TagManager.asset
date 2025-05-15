@@ -9,6 +9,7 @@ TagManager:
   - Sword
   - Bullet
   - EnemyBullet
+  - NPC
   layers:
   - Default
   - TransparentFX

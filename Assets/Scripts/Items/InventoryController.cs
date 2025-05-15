@@ -19,7 +19,10 @@ public class InventoryController : MonoBehaviour
     [SerializeField] TMP_Text descriprionText;
     [SerializeField] TMP_Text weaponBonusText;
     [SerializeField] TMP_Text armourBonusText;
+    [SerializeField] TMP_Text moneyAmount;
     [SerializeField] GameObject itemVisualizer;
+
+    public PlayerController player;
 
     // Update is called once per frame
     void Update()
@@ -37,6 +40,31 @@ public class InventoryController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.K))
         {
             AddItem(items[2]);
+            Debug.Log(GetAvailableSpace());
+        }
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            AddItem(items[3]);
+            Debug.Log(GetAvailableSpace());
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            AddItem(items[4]);
+            Debug.Log(GetAvailableSpace());
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            AddItem(items[5]);
+            Debug.Log(GetAvailableSpace());
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            AddItem(items[6]);
+            Debug.Log(GetAvailableSpace());
+        }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            AddItem(items[7]);
             Debug.Log(GetAvailableSpace());
         }
     }
@@ -82,7 +110,7 @@ public class InventoryController : MonoBehaviour
                 }
             }
         }
-        else if (item.GetComponent<Item>().ReturnType() == "Weapon")
+        else if (item.GetComponent<Item>().ReturnType() == "Gun")
         {
             if (GetAvailableSpace() == -1) { return; }
             itemIcon = new GameObject("Sword");
@@ -98,10 +126,74 @@ public class InventoryController : MonoBehaviour
             itemIcon.GetComponent<PointerEnterHandler>().item = item;
             itemIcon.GetComponent<PointerEnterHandler>().inventoryController = this;
         }
+        else if (item.GetComponent<Item>().ReturnType() == "Sword")
+        {
+            if (GetAvailableSpace() == -1) { return; }
+            itemIcon = new GameObject("Sword");
+            itemIcon.AddComponent<RawImage>();
+            itemIcon.GetComponent<RawImage>().texture = item.GetComponent<Item>().ReturnIcon();
+            itemIcon.transform.SetParent(spaces[GetAvailableSpace()].transform);
+            itemIcon.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            itemIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(40f, 40f);
+            itemIcon.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);
+            itemIcon.AddComponent<Button>();
+            itemIcon.GetComponent<Button>().onClick.AddListener(() => { UseObject(itemIcon, item); });
+            itemIcon.AddComponent<PointerEnterHandler>();
+            itemIcon.GetComponent<PointerEnterHandler>().item = item;
+            itemIcon.GetComponent<PointerEnterHandler>().inventoryController = this;
+        }
         else if (item.GetComponent<Item>().ReturnType() == "Armour")
         {
             if (GetAvailableSpace() == -1) { return; }
             itemIcon = new GameObject("Armour");
+            itemIcon.AddComponent<RawImage>();
+            itemIcon.GetComponent<RawImage>().texture = item.GetComponent<Item>().ReturnIcon();
+            itemIcon.transform.SetParent(spaces[GetAvailableSpace()].transform);
+            itemIcon.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            itemIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(40f, 40f);
+            itemIcon.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);
+            itemIcon.AddComponent<Button>();
+            itemIcon.GetComponent<Button>().onClick.AddListener(() => { UseObject(itemIcon, item); });
+            itemIcon.AddComponent<PointerEnterHandler>();
+            itemIcon.GetComponent<PointerEnterHandler>().item = item;
+            itemIcon.GetComponent<PointerEnterHandler>().inventoryController = this;
+        }
+        else if (item.GetComponent<Item>().ReturnType() == "Feet")
+        {
+            if (GetAvailableSpace() == -1) { return; }
+            itemIcon = new GameObject("Botes");
+            itemIcon.AddComponent<RawImage>();
+            itemIcon.GetComponent<RawImage>().texture = item.GetComponent<Item>().ReturnIcon();
+            itemIcon.transform.SetParent(spaces[GetAvailableSpace()].transform);
+            itemIcon.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            itemIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(40f, 40f);
+            itemIcon.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);
+            itemIcon.AddComponent<Button>();
+            itemIcon.GetComponent<Button>().onClick.AddListener(() => { UseObject(itemIcon, item); });
+            itemIcon.AddComponent<PointerEnterHandler>();
+            itemIcon.GetComponent<PointerEnterHandler>().item = item;
+            itemIcon.GetComponent<PointerEnterHandler>().inventoryController = this;
+        }
+        else if (item.GetComponent<Item>().ReturnType() == "Ring")
+        {
+            if (GetAvailableSpace() == -1) { return; }
+            itemIcon = new GameObject("Anell");
+            itemIcon.AddComponent<RawImage>();
+            itemIcon.GetComponent<RawImage>().texture = item.GetComponent<Item>().ReturnIcon();
+            itemIcon.transform.SetParent(spaces[GetAvailableSpace()].transform);
+            itemIcon.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            itemIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(40f, 40f);
+            itemIcon.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);
+            itemIcon.AddComponent<Button>();
+            itemIcon.GetComponent<Button>().onClick.AddListener(() => { UseObject(itemIcon, item); });
+            itemIcon.AddComponent<PointerEnterHandler>();
+            itemIcon.GetComponent<PointerEnterHandler>().item = item;
+            itemIcon.GetComponent<PointerEnterHandler>().inventoryController = this;
+        }
+        else if (item.GetComponent<Item>().ReturnType() == "Helmet")
+        {
+            if (GetAvailableSpace() == -1) { return; }
+            itemIcon = new GameObject("Helmet");
             itemIcon.AddComponent<RawImage>();
             itemIcon.GetComponent<RawImage>().texture = item.GetComponent<Item>().ReturnIcon();
             itemIcon.transform.SetParent(spaces[GetAvailableSpace()].transform);
@@ -148,7 +240,8 @@ public class InventoryController : MonoBehaviour
 
     public void UseObject(GameObject itemR, GameObject item)
     {
-        item.GetComponent<Item>().Use(GameObject.Find("Player").GetComponent<PlayerController>());
+        Debug.Log(item);
+        item.GetComponent<Item>().Use(player.GetComponent<PlayerController>());
         if(item.GetComponent<Item>().ReturnType() == "Consum")
         {
             if (itemR.transform.childCount > 0)
@@ -170,31 +263,111 @@ public class InventoryController : MonoBehaviour
                 Destroy(itemR);
             }
         }
-        else if(item.GetComponent<Item>().ReturnType() == "Weapon")
+        else if(item.GetComponent<Item>().ReturnType() == "Gun")
         {
-            itemR.transform.parent = WeaponSlot.transform;
+            if(WeaponSlot.transform.childCount > 0)
+            {
+                Debug.Log("Hi ha un altre item :)");
+                UnequipWeapon(WeaponSlot.transform.GetChild(0).gameObject, WeaponSlot.transform.GetChild(0).gameObject.GetComponent<PointerEnterHandler>().item);
+            }
+            itemR.transform.SetParent(WeaponSlot.transform);
             itemR.GetComponent<RectTransform>().localPosition = Vector3.zero;
             itemR.GetComponent<Button>().onClick.RemoveAllListeners();
             itemR.GetComponent<Button>().onClick.AddListener(() => { UnequipWeapon(itemR, item); }) ;
             weaponBonusText.text = "+" + item.GetComponent<Item>().ReturnBonus() + " DMG";
+            player.EquipWeapon("Gun", item.GetComponent<Item>().ReturnBonus());
+        }
+        else if (item.GetComponent<Item>().ReturnType() == "Sword")
+        {
+            if (WeaponSlot.transform.childCount > 0)
+            {
+                UnequipWeapon(WeaponSlot.transform.GetChild(0).gameObject, WeaponSlot.transform.GetChild(0).gameObject.GetComponent<PointerEnterHandler>().item);
+            }
+            itemR.transform.SetParent(WeaponSlot.transform);
+            itemR.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            itemR.GetComponent<Button>().onClick.RemoveAllListeners();
+            itemR.GetComponent<Button>().onClick.AddListener(() => { UnequipWeapon(itemR, item); });
+            weaponBonusText.text = "+" + item.GetComponent<Item>().ReturnBonus() + " DMG";
+            player.EquipWeapon("Sword", item.GetComponent<Item>().ReturnBonus());
         }
         else if(item.GetComponent<Item>().ReturnType() == "Armour")
         {
+            if(ArmourSlot.transform.childCount > 0)
+            {
+                UnequipArmour(ArmourSlot.transform.GetChild(0).gameObject, ArmourSlot.transform.GetChild(0).gameObject.GetComponent<PointerEnterHandler>().item);
+            }
             itemR.transform.parent = ArmourSlot.transform;
             itemR.GetComponent<RectTransform>().localPosition = Vector3.zero;
             itemR.GetComponent<Button>().onClick.RemoveAllListeners();
             itemR.GetComponent<Button>().onClick.AddListener(() => { UnequipArmour(itemR, item); });
-            armourBonusText.text = "+" + item.GetComponent<Item>().ReturnBonus() + " DEF";
+            string armourBonusString = armourBonusText.text;
+            char num = armourBonusString[1];
+            int value = (int)char.GetNumericValue(num);
+            value += item.GetComponent<Item>().ReturnBonus();
+            armourBonusText.text = "+" + value + " DEF";
+            player.changeDefense(item.GetComponent<Item>().ReturnBonus()/10f);
+        }
+        else if (item.GetComponent<Item>().ReturnType() == "Feet")
+        {
+            if (FeetSlot.transform.childCount > 0)
+            {
+                UnequipArmour(FeetSlot.transform.GetChild(0).gameObject, FeetSlot.transform.GetChild(0).gameObject.GetComponent<PointerEnterHandler>().item);
+            }
+            itemR.transform.parent = FeetSlot.transform;
+            itemR.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            itemR.GetComponent<Button>().onClick.RemoveAllListeners();
+            itemR.GetComponent<Button>().onClick.AddListener(() => { UnequipArmour(itemR, item); });
+            string armourBonusString = armourBonusText.text;
+            char num = armourBonusString[1];
+            int value = (int)char.GetNumericValue(num);
+            value += item.GetComponent<Item>().ReturnBonus();
+            armourBonusText.text = "+" + value + " DEF";
+            player.changeDefense(item.GetComponent<Item>().ReturnBonus() / 10f);
+        }
+        else if (item.GetComponent<Item>().ReturnType() == "Helmet")
+        {
+            if (HelmetSlot.transform.childCount > 0)
+            {
+                UnequipArmour(HelmetSlot.transform.GetChild(0).gameObject, HelmetSlot.transform.GetChild(0).gameObject.GetComponent<PointerEnterHandler>().item);
+            }
+            itemR.transform.parent = HelmetSlot.transform;
+            itemR.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            itemR.GetComponent<Button>().onClick.RemoveAllListeners();
+            itemR.GetComponent<Button>().onClick.AddListener(() => { UnequipArmour(itemR, item); });
+            string armourBonusString = armourBonusText.text;
+            char num = armourBonusString[1];
+            int value = (int)char.GetNumericValue(num);
+            value += item.GetComponent<Item>().ReturnBonus();
+            armourBonusText.text = "+" + value + " DEF";
+            player.changeDefense(item.GetComponent<Item>().ReturnBonus() / 10f);
+        }
+        else if (item.GetComponent<Item>().ReturnType() == "Ring")
+        {
+            if (RingSlot.transform.childCount > 0)
+            {
+                UnequipArmour(RingSlot.transform.GetChild(0).gameObject, RingSlot.transform.GetChild(0).gameObject.GetComponent<PointerEnterHandler>().item);
+            }
+            itemR.transform.parent = RingSlot.transform;
+            itemR.GetComponent<RectTransform>().localPosition = Vector3.zero;
+            itemR.GetComponent<Button>().onClick.RemoveAllListeners();
+            itemR.GetComponent<Button>().onClick.AddListener(() => { UnequipArmour(itemR, item); });
+            string armourBonusString = armourBonusText.text;
+            char num = armourBonusString[1];
+            int value = (int)char.GetNumericValue(num);
+            value += item.GetComponent<Item>().ReturnBonus();
+            armourBonusText.text = "+" + value + " DEF";
+            player.changeDefense(item.GetComponent<Item>().ReturnBonus() / 10f);
         }
     }
 
     public void UnequipWeapon(GameObject itemR, GameObject item)
     {
-        itemR.transform.parent = spaces[GetAvailableSpace()].transform;
+        itemR.transform.SetParent(spaces[GetAvailableSpace()].transform);
         itemR.GetComponent<RectTransform>().localPosition = Vector3.zero;
         itemR.GetComponent<Button>().onClick.RemoveAllListeners();
         itemR.GetComponent<Button>().onClick.AddListener(() => { UseObject(itemR, item); });
         weaponBonusText.text = "+0 DMG";
+        player.UnequipWeapon();
 
     }
     public void UnequipArmour(GameObject itemR, GameObject item)
@@ -208,6 +381,7 @@ public class InventoryController : MonoBehaviour
         int value = (int)char.GetNumericValue(num);
         value -= item.GetComponent<Item>().ReturnBonus();
         armourBonusText.text = "+" + value + " DEF";
+        player.changeDefense(-(item.GetComponent<Item>().ReturnBonus()/10f));
     }
 
     public void changeItemVisualizer(GameObject item)
@@ -223,5 +397,10 @@ public class InventoryController : MonoBehaviour
         ItemTitle.text = "";
         descriprionText.text = "";
         itemVisualizer.GetComponent<RawImage>().color = Color.clear;
+    }
+
+    public void changeMoneyAmount(int money)
+    {
+        moneyAmount.text = money + "€";
     }
 }
