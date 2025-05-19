@@ -5,8 +5,7 @@ using UnityEngine;
 public class ModuleController : MonoBehaviour
 {
 
-    [SerializeField]
-    GameObject module;
+    public GameObject module;
 
     GameObject moduleSpawner;
 

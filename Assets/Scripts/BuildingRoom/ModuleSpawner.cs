@@ -5,25 +5,116 @@ using UnityEngine;
 public class ModuleSpawner : MonoBehaviour
 {
     [SerializeField]
-    List<GameObject> modulesMov = new List<GameObject>();
+    List<GameObject> modules = new List<GameObject>();
+    [SerializeField] GameObject moduleMov;
     List<Vector3> shipPosition = new List<Vector3>();
     List<GameObject> ship = new List<GameObject>();
+    List<GameObject> shipModules = new List<GameObject>();
+    public List<Vector3> shipPositionTmp = new List<Vector3>();
+    public List<GameObject> shipTmp = new List<GameObject>();
 
-    GameObject currentModule;
+    public GameObject currentModule;
+
+    public GameController gameController;
+
+    private void Start()
+    {
+        if (gameController == null)
+        {
+            gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        }
+
+        /*shipTmp = gameController.getShip();
+        shipPositionTmp = gameController.getShipPos();
+
+        if (shipTmp.Count > 0)
+        {
+            ship.Clear();
+            shipPosition.Clear();
+            for (int i = 0; i < ship.Count; i++)
+            {
+                GameObject moduleTmp = Instantiate(shipTmp[i], shipPositionTmp[i], Quaternion.identity);
+                shipPosition.Add(moduleTmp.transform.position);
+                ship.Add(moduleTmp);
+                gameController.AddModule(moduleTmp, moduleTmp.transform.position);
+            }
+        }*/
+    }
+
+    public void DeleteShip()
+    {
+        for (int i = 0; i < ship.Count; i++)
+        {
+            Destroy(shipModules[i]);
+        }
+
+        ship.Clear();
+        shipPosition.Clear();
+        shipModules.Clear();
+    }
+
+    public void spawnShip()
+    {
+        if (ship.Count > 0)
+            return;
+        shipTmp = gameController.getShip();
+        shipPositionTmp = gameController.getShipPos();
+
+        Debug.Log("Rebo: " + shipTmp.Count);
+
+        if (shipTmp.Count > 0)
+        {
+            Debug.Log("Entro");
+            ship.Clear();
+            shipPosition.Clear();
+            shipModules.Clear();
+            for (int i = 0; i < shipTmp.Count; i++)
+            {
+                GameObject moduleTmp = Instantiate(shipTmp[i], shipPositionTmp[i], Quaternion.identity);
+                shipPosition.Add(shipPositionTmp[i]);
+                ship.Add(shipTmp[i]);
+                shipModules.Add(moduleTmp);
+                //gameController.AddModule(moduleTmp, moduleTmp.transform.position);
+            }
+        }
+        /*shipTmp.Clear();
+        shipPositionTmp.Clear();*/
+    }
 
     public void spawnModule(int i)
     {
         if (currentModule != null)
         {
-            Destroy(currentModule);
+            currentModule.GetComponent<ModuleController>().module = modules[i];
         }
-        currentModule = Instantiate(modulesMov[i], Vector3.zero, Quaternion.identity);
+        else
+        {
+            currentModule = Instantiate(moduleMov, Vector3.zero, Quaternion.identity);
+            currentModule.GetComponent<ModuleController>().module = modules[i];
+        }
     }
 
     public void AddModule(GameObject module, Vector3 mousePos)
     {
-        shipPosition.Add(Instantiate(module, mousePos, Quaternion.identity).transform.position);
-        ship.Add(Instantiate(module, mousePos, Quaternion.identity));
+        GameObject moduleTmp = Instantiate(module, mousePos, Quaternion.identity);
+        shipPosition.Add(mousePos);
+        ship.Add(module);
+        shipModules.Add(moduleTmp);
+    }
+
+    public void SaveShip()
+    {
+        gameController.ClearList();
+        for(int i = 0; i<ship.Count; i++)
+        {
+            gameController.AddModule(ship[i], shipPosition[i]);
+        }
+    }
+
+    public void StopAdding()
+    {
+        Destroy(currentModule);
+        currentModule = null;
     }
 
     public bool checkPlacement(Vector3 pos, GameObject module)
@@ -39,7 +130,7 @@ public class ModuleSpawner : MonoBehaviour
 
             int idx = shipPosition.IndexOf(left);
             string position = "left";
-            if(idx == -1)
+            if (idx == -1)
             {
                 idx = shipPosition.IndexOf(right);
                 position = "right";
@@ -57,7 +148,6 @@ public class ModuleSpawner : MonoBehaviour
 
             if (idx != -1)
             {
-                Debug.Log(idx);
                 return ship[idx].GetComponent<Module>().checkPlacment(module.GetComponent<Module>(), position);
             }
             return false;
