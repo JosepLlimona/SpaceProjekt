@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8045398644466794697
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5397695568300439002}
+  - component: {fileID: 3619304834594998292}
+  m_Layer: 0
+  m_Name: ModuleSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5397695568300439002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8045398644466794697}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3619304834594998292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8045398644466794697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcd70e278cbbe3e4aa0bbf46e5189495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modules:
+  - {fileID: 3599930217086626947, guid: bda2bc8b763a97045bb42144bd5e118f, type: 3}
+  - {fileID: 3599930217086626947, guid: 611daead84c6717498c4b5eaedcf7533, type: 3}
+  - {fileID: 3599930217086626947, guid: b4d54c4ef3114ef4e9cb2b047f25f235, type: 3}
+  - {fileID: 3599930217086626947, guid: c7dbf19436c8eb14dadd96ae35e2ed06, type: 3}
+  - {fileID: 3599930217086626947, guid: c6844d0f3cc8c4f4d9b67361549b1f55, type: 3}
+  - {fileID: 3599930217086626947, guid: 7ce900f69547dfd4292d6d33b8593bad, type: 3}
+  moduleMov: {fileID: 6605998992864440198, guid: 07f2114659a115e4a98f6f28cd34e561, type: 3}
+  shipPositionTmp: []
+  shipTmp: []
+  currentModule: {fileID: 0}
+  gameController: {fileID: 0}

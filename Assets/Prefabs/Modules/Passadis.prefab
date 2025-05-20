@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Tren d'aterratge
+  m_text: "Passad\xEDs"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44637b16a30535941917abe83cbb5913, type: 2}
   m_sharedMaterial: {fileID: 1656186779351236735, guid: 44637b16a30535941917abe83cbb5913, type: 2}
@@ -74,8 +74,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.2
+  m_fontSize: 0.3
   m_fontSizeBase: 0.3
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 3580043305381444713}
   - component: {fileID: 6820979384172467332}
   m_Layer: 0
-  m_Name: Aterratge
+  m_Name: Passadis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -210,7 +210,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 0.0791831, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.74655265, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -233,10 +233,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   up: 1
-  right: 0
-  down: 0
+  right: 1
+  down: 1
   left: 1
-  type: Landing
+  type: Hallway
 --- !u!1 &6114307967128290713
 GameObject:
   m_ObjectHideFlags: 0

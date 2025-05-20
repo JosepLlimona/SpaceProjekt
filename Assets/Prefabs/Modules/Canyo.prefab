@@ -236,6 +236,7 @@ MonoBehaviour:
   right: 0
   down: 1
   left: 1
+  type: Weapon
 --- !u!1 &6114307967128290713
 GameObject:
   m_ObjectHideFlags: 0

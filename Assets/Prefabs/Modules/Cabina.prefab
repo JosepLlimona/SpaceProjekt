@@ -236,6 +236,7 @@ MonoBehaviour:
   right: 1
   down: 1
   left: 0
+  type: Cabin
 --- !u!1 &6114307967128290713
 GameObject:
   m_ObjectHideFlags: 0

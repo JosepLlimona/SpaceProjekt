@@ -10,6 +10,9 @@ public class Module : MonoBehaviour
     public bool down = false;
     public bool left = false;
 
+    [Header("Type")]
+    public string type;
+
     public bool checkPlacment(Module module, string pos)
     {
         if(pos == "up")
