@@ -64,17 +64,17 @@ public class PlayerController : MonoBehaviour
         isCovered = false;
         rb = GetComponent<Rigidbody2D>();
         shootTime = 0.5f - GetModifier(dexterity) / 20;
-        if(shootTime <= 0)
+        if (shootTime <= 0)
         {
             shootTime = 0.1f;
         }
 
         maxHealth = 10 + GetModifier(constitution);
         health = maxHealth;
-        healthBar .maxValue = maxHealth;
+        healthBar.maxValue = maxHealth;
         healthBar.value = health;
 
-        if(inventory == null)
+        if (inventory == null)
         {
             inventory = GameObject.Find("Inventory").GetComponent<InventoryController>();
         }
@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
                 {
                     finalDamage *= 2; // Critic x2
                 }
-                if(finalDamage <= 0 )
+                if (finalDamage <= 0)
                 {
                     finalDamage = 0.5f;
                 }
@@ -216,14 +216,81 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            inventoryAnim.SetBool("IsInventory", !inventoryAnim.GetBool("IsInventory"));
-            canAct = !canAct;
+            if (inventoryAnim.GetBool("IsInStats"))
+            {
+                StartCoroutine(ChangeToInventory());
+            }
+            else if (inventoryAnim.GetBool("IsInventory"))
+            {
+                inventoryAnim.SetBool("IsInventory", false);
+                inventoryAnim.SetBool("ChanItS", false);
+                inventoryAnim.SetBool("ChanStI", false);
+                canAct = true;
+            }
+            else
+            {
+                inventoryAnim.SetBool("IsInventory", true);
+                canAct = false;
+            }
         }
+    }
+
+    public void OpenStats(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (inventoryAnim.GetBool("IsInventory"))
+            {
+                StartCoroutine(ChangeToStats());
+            }
+            else if (inventoryAnim.GetBool("IsInStats"))
+            {
+                inventoryAnim.SetBool("IsInStats", false);
+                inventoryAnim.SetBool("ChanItS", false);
+                inventoryAnim.SetBool("ChanStI", false);
+                canAct = true;
+            }
+            else
+            {
+                inventoryAnim.SetBool("IsInStats", true);
+                canAct = false;
+            }
+        }
+    }
+
+    public void CTSButton()
+    {
+        StartCoroutine(ChangeToStats());
+    }
+
+    public void CTIButton()
+    {
+        StartCoroutine(ChangeToInventory());
+    }
+
+    private IEnumerator ChangeToStats()
+    {
+        inventoryAnim.SetBool("ChanStI", false);
+        inventoryAnim.SetBool("ChanItS", true);
+        inventoryAnim.SetBool("IsInStats", true);
+
+        yield return new WaitForSeconds(1f);
+        inventoryAnim.SetBool("IsInventory", false);
+    }
+
+    private IEnumerator ChangeToInventory()
+    {
+        inventoryAnim.SetBool("ChanItS", false);
+        inventoryAnim.SetBool("ChanStI", true);
+        inventoryAnim.SetBool("IsInventory", true);
+
+        yield return new WaitForSeconds(1f);
+        inventoryAnim.SetBool("IsInStats", false);
     }
 
     public void Talk(InputAction.CallbackContext context)
     {
-        if(context.performed && canTalk)
+        if (context.performed && canTalk)
         {
             isTalking = true;
             Debug.Log("Estic parlant");
@@ -276,7 +343,7 @@ public class PlayerController : MonoBehaviour
             LoseHealth(1);
         }
 
-        if(collision.tag == "NPC")
+        if (collision.tag == "NPC")
         {
             canTalk = true;
             npc = collision.GetComponent<NPCController>();
@@ -305,7 +372,7 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if(collision.tag == "NPC")
+        if (collision.tag == "NPC")
         {
             canTalk = false;
         }
@@ -314,6 +381,48 @@ public class PlayerController : MonoBehaviour
     private int GetModifier(int stat)
     {
         return (stat - 10);
+    }
+
+    public int GetStat(int stat)
+    {
+        switch (stat)
+        {
+            case 0: return strenght;
+            case 1: return dexterity;
+            case 2: return constitution;
+            case 3: return inteligence;
+            case 4: return charisma;
+            case 5: return luck;
+            default:
+                return 0;
+        }
+    }
+
+    public void SetStat(int stat, int value)
+    {
+        switch (stat)
+        {
+            case 0:
+                strenght = value;
+                break;
+            case 1:
+                dexterity = value;
+                break;
+            case 2:
+                constitution = value;
+                break;
+            case 3:
+                inteligence = value;
+                break;
+            case 4:
+                charisma = value;
+                break;
+            case 5:
+                luck = value;
+                break;
+            default:
+                break;
+        }
     }
 
     public int GetCharMod()
@@ -335,11 +444,11 @@ public class PlayerController : MonoBehaviour
 
     public void EquipWeapon(string type, float damage)
     {
-        if(type == "Sword")
+        if (type == "Sword")
         {
             canMele = true;
         }
-        else if(type == "Gun")
+        else if (type == "Gun")
         {
             canShoot = true;
         }

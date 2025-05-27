@@ -1743,7 +1743,6 @@ GameObject:
   - component: {fileID: 2632094059207818576}
   - component: {fileID: 8339737267601332822}
   - component: {fileID: 8606668587658735929}
-  - component: {fileID: 7806197022312951139}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -1810,27 +1809,6 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!95 &7806197022312951139
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4987753987206038734}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 40a7f76ba4ac8694c846d6c6d75ef012, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5453318380191171038
 GameObject:
   m_ObjectHideFlags: 0
@@ -2545,7 +2523,9 @@ MonoBehaviour:
   descriprionText: {fileID: 4565365443923016585}
   weaponBonusText: {fileID: 1388978020129501856}
   armourBonusText: {fileID: 4713897636820327666}
+  moneyAmount: {fileID: 0}
   itemVisualizer: {fileID: 6315247595180375139}
+  player: {fileID: 0}
 --- !u!1 &6552967193275692851
 GameObject:
   m_ObjectHideFlags: 0
