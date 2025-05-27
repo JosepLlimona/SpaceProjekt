@@ -37,9 +37,13 @@ public class ModuleController : MonoBehaviour
             red.a = 0.6f;
             GetComponent<SpriteRenderer>().color = red;
         }
-        if (Input.GetMouseButtonDown(0) && canPlace)
+        if (Input.GetMouseButtonDown(0))
         {
-            moduleSpawner.GetComponent<ModuleSpawner>().AddModule(module, mousePos);   
+            Debug.Log("Checking: " + mousePos);
+            if (moduleSpawner.GetComponent<ModuleSpawner>().checkPlacement(mousePos, module))
+            {
+                moduleSpawner.GetComponent<ModuleSpawner>().AddModule(module, mousePos);
+            }
         }
 
     }

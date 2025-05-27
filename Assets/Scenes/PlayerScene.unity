@@ -1350,7 +1350,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1317261917}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -1496,7 +1496,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 10
   healthBar: {fileID: 1651260053}
-  bullet: {fileID: 8948044773039524384, guid: 226ac5a8e585fc14381837e16cf0eb11, type: 3}
+  bullet: {fileID: 8948044773039524384, guid: 8a30417d3ca082b4f8e52e49087f9a72, type: 3}
 --- !u!1 &1384428282
 GameObject:
   m_ObjectHideFlags: 0

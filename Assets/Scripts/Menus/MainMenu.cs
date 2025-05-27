@@ -12,6 +12,10 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Canvas mainCanvas;
     [SerializeField] Canvas infoCanvas;
 
+    public void NewGame()
+    {
+        sceneController.LoadSceneSingle(3);
+    }
     public void RogueLiteNew()
     {
         gameController.DeleteFile();

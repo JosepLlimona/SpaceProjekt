@@ -147,6 +147,8 @@ public class ModuleSpawner : MonoBehaviour
                 this.shipPosition.Add(gameController.shipPosition[i]);
                 this.ship.Add(gameController.ship[i]);
                 this.shipModules.Add(moduleTmp);
+                weapons = 0;
+                shields = 0;
                 if (gameController.ship[i].name == "Cabina")
                 {
                     hasCabin = true;
@@ -158,6 +160,14 @@ public class ModuleSpawner : MonoBehaviour
                 else if (gameController.ship[i].name == "Aterratge")
                 {
                     hasLanding = true;
+                }
+                else if (gameController.ship[i].name == "Canyo")
+                {
+                    weapons++;
+                }
+                else if (gameController.ship[i].name == "Escuts")
+                {
+                    shields++;
                 }
             }
         }
@@ -241,6 +251,8 @@ public class ModuleSpawner : MonoBehaviour
             {
                 gameController.AddModule(ship[i], shipPosition[i]);
             }
+            gameController.ShipWeapon = weapons;
+            gameController.ShipShield = shields;
             gameController.SaveShipFile();
         }
         else
@@ -259,6 +271,11 @@ public class ModuleSpawner : MonoBehaviour
     {
         if (ship.Count <= 0)
             return true;
+        else if (shipPosition.Contains(pos))
+        {
+            Debug.Log("Entro");
+            return false;
+        }
         else
         {
             Vector3 left = new Vector3(pos.x - 1, pos.y, 0);

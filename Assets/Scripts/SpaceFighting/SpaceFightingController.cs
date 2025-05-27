@@ -85,7 +85,7 @@ public class SpaceFightingController : MonoBehaviour
         IAActions();
         playerHealth = controller.GetShipHealth();
         RefreshPlayerHealthNumber();
-        IAHealth = controller.IALevel + 3;
+        IAHealth = controller.IALevel + 1;
         RefreshIAHelathNumber();
     }
 
@@ -284,7 +284,7 @@ public class SpaceFightingController : MonoBehaviour
                 HurtIA();
             }
         }
-        else if (iaAction == "Attack")
+        if (iaAction == "Attack")
         {
             if (playerAction == "Defense")
             {

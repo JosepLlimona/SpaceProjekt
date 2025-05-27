@@ -163,7 +163,7 @@ public class EnemyController : MonoBehaviour
         }
         GameObject tmpBullet = Instantiate(bullet, bulletSpawn, Quaternion.identity);
         Vector2 dir = (player.transform.position - this.transform.position).normalized;
-        tmpBullet.GetComponent<BulletController>().dir = dir;
+        tmpBullet.GetComponent<BulletControllerEnemy>().dir = dir;
         yield return new WaitForSeconds(1f);
         isAttacking = false;
         iaController.FinishTurn(this);

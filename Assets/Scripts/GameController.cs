@@ -18,8 +18,8 @@ public class GameController : MonoBehaviour
     public List<Vector3> shipPosition = new List<Vector3>();
     public List<GameObject> ship = new List<GameObject>();
     public List<int> modulesAmount = new List<int>();
-    int ShipWeapon = 0;
-    int ShipShield = 0;
+    public int ShipWeapon = 0;
+    public int ShipShield = 0;
 
     string fileName = "Ship";
 
