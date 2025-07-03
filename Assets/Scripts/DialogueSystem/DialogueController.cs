@@ -23,15 +23,19 @@ public class DialogueController : MonoBehaviour
     [SerializeField]
     Animator animator;
 
+    NPCController npc;
+
+    public string[] fs;
+
     bool canContinue = false;
-    int i;
+    public int i;
     public bool hasDecided = false;
     int choiceDificulty = 0; // 1 = Facil, 2 = Mitj, 3 = Dificil
     int price = 0;
 
     private void Start()
     {
-        if(player == null)
+        if (player == null)
         {
             Debug.Log("Buscant player");
             GameObject.Find("Player").GetComponent<PlayerController>();
@@ -39,8 +43,9 @@ public class DialogueController : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    public void StartDialog()
+    public void StartDialog(NPCController talker)
     {
+        npc = talker;
         animator.SetBool("IsInDialog", true);
         if (dialogueFile == null)
         {
@@ -48,7 +53,8 @@ public class DialogueController : MonoBehaviour
             return;
         }
 
-        string[] fs = dialogueFile.text.Split(new string[] { ",", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
+        /*string[]*/
+        fs = dialogueFile.text.Split(new string[] { ",", "\r", "\n" }, System.StringSplitOptions.RemoveEmptyEntries);
 
         StartCoroutine(ManageDialogue(fs));
     }
@@ -58,6 +64,7 @@ public class DialogueController : MonoBehaviour
         for (i = 0; i < script.Length; i++)
         {
             canContinue = false;
+            StopCoroutine("TextAnim");
             StartCoroutine(TextAnim(script[i]));
             while (!canContinue)
             {
@@ -76,6 +83,7 @@ public class DialogueController : MonoBehaviour
                     i++;
                     int nextChoices = int.Parse(script[i]);
                     i = nextChoices * 3;
+                    Debug.Log("i: " + i);
                     yield return StartCoroutine(ManageChoices(script));
                     break;
                 case "F":
@@ -85,12 +93,12 @@ public class DialogueController : MonoBehaviour
                     {
                         Debug.Log("Final del dialeg");
                     }
-                    else if(ending > 0)
+                    else if (ending > 0)
                     {
                         Debug.Log("Guanayt: " + ending);
                         player.GainMoney(ending);
                     }
-                    else if(ending == -1)
+                    else if (ending == -1)
                     {
                         Debug.Log("Entrant botiga");
                     }
@@ -98,17 +106,17 @@ public class DialogueController : MonoBehaviour
                     {
                         Debug.Log("Entrant minijoc");
                     }
-                    else if(ending == -3)
+                    else if (ending == -3)
                     {
                         Debug.Log("Iniciant combat");
                     }
-                    else if(ending == -4)
+                    else if (ending == -4)
                     {
                         Debug.Log("Conseguint objecte");
                     }
                     animator.SetBool("IsInDialog", false);
                     player.isTalking = false;
-
+                    npc.ChangeFile();
                     yield break;
                 default:
                     Debug.Log(script[i]);
@@ -122,12 +130,12 @@ public class DialogueController : MonoBehaviour
         bool isInChoices = true;
         //i++;
         Debug.Log("Entro MC");
+        DeleteOptions();
         textSquare.gameObject.SetActive(false);
         choiceBox.SetActive(true);
         while (isInChoices)
         {
             GameObject choiceTmp = Instantiate(choiceItem);
-            choiceTmp.GetComponent<ChoiceController>().chocieText = script[i];
             i++;
             choiceTmp.GetComponent<ChoiceController>().nextLine = script[i];
             choiceTmp.GetComponent<ChoiceController>().dialogueController = this;
@@ -171,7 +179,8 @@ public class DialogueController : MonoBehaviour
                 isInChoices = false;
                 choiceDificulty = 1;
             }
-            else if (script[i].Contains("MB")){
+            else if (script[i].Contains("MB"))
+            {
                 string[] separator = script[i].Split('-');
                 price = int.Parse(separator[1]);
                 Debug.Log("Preu: " + price);
@@ -198,6 +207,7 @@ public class DialogueController : MonoBehaviour
 
     public void ChooseOption(string nextLine, bool hasCheck, bool hasToPay)
     {
+        Debug.Log("He d'anar a " + nextLine);
         hasDecided = true;
         if (hasCheck)
         {
@@ -237,7 +247,7 @@ public class DialogueController : MonoBehaviour
         else if (hasToPay)
         {
             string[] next = nextLine.Split('-');
-            if(player.money >= price)
+            if (player.money >= price)
             {
                 i = (int.Parse(next[1]) * 3) - 1;
                 player.looseMoney(price);
@@ -261,7 +271,10 @@ public class DialogueController : MonoBehaviour
 
         foreach (char c in characters)
         {
-            msg += c;
+            if (c == ';')
+                msg += ",";
+            else
+                msg += c;
             textSquare.text = msg;
             yield return new WaitForSeconds(textAnimTime);
         }
@@ -270,6 +283,15 @@ public class DialogueController : MonoBehaviour
     public void ContinueDialogue()
     {
         canContinue = true;
+        hasDecided = false;
         StopCoroutine("TextAnim");
+    }
+
+    public void DeleteOptions()
+    {
+        foreach(Transform child in choiceBox.transform.GetChild(0))
+        {
+            Destroy(child.gameObject);
+        }
     }
 }

@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float dashingPower = 24f;
     [SerializeField] float dashingTime = 0.2f;
     [SerializeField] float dashingCooldown = 1f;
-    [SerializeField] Animator inventoryAnim;
+    [SerializeField] Animator playerAnim;
     Rigidbody2D rb;
     Vector2 dir = Vector2.zero;
     bool isRunning = false;
@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
     [Header("Miscellaneous")]
     [SerializeField]
     InventoryController inventory;
+    [SerializeField] Animator inventoryAnim;
     bool canAct = true;
 
 
@@ -89,6 +90,11 @@ public class PlayerController : MonoBehaviour
         {
             if (isDashing) { return; }
             rb.velocity = dir * speed;
+            if (rb.velocity != Vector2.zero)
+            {
+                playerAnim.SetFloat("X", rb.velocity.x);
+                playerAnim.SetFloat("Y", rb.velocity.y);
+            }
         }
     }
 

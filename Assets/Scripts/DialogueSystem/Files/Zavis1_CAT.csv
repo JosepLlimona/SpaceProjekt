@@ -1,0 +1,51 @@
+Bon dia capità.,C,1
+Tot llest per l'enviament d'avui,O,2
+Tot llest per el despagament.,5,M
+Em podries recordar que haviem de fer avui...,17,M
+Perdona... ets...?,31,F
+Perfecte. M'he fixat que ens dirigim a 571-/9A.,C,6
+La ruta es una mica perillosa.,C,7
+Hauriem de muntar un modul d'armament a la nau.,C,8
+Tens els diners necessaris; veritat?,O,9
+[Mentir] Clar que si.,12,M
+La veritat és que no però deixo a les meves mans.,13,M
+[Check] No... me'ls podries deixar de moment. Ja t'ho pagare del que en treiem.,14-15,FCF
+Perfecte. T'espero a la pista.,F,0
+No cometis cap estupidesa sispalu.,F,0
+Vale... però aquesta me l'apunto.,F,100
+Ho sento; però no penso caure aquest cop.,C,16
+Segur que ja te'n surts sol.,F,0
+Una altre nit de festa?,C,18
+Ens hem de dirigir a 571-/9A.,C,19
+Hem de portar un cargament de subministres a la capital del planeta.,O,20
+Si no recrdo malament l'espai orvital d'aquell planeta és molt perillós.,23,M
+I ho tenim ja tot preparat?,25,M
+Ja me'n recordava; només t'estava posant a punt.,28,F
+Correcte. Hauriem de comprar un modul d'armament.,C,24
+Tens els diners per fer-ho?,O,9
+El cargament està a bord.,C,26
+Però necessiteriem un mòdul d'armament per poder defensar-nos.,C,27
+Tens els diner per comprar-ne un?,O,9
+Si; segur...,C,29
+També tenim el problema de que l'espai orbital és molt perillós.,C,30
+Necessitem un mòdul d'armament. Tens els diners per comprar-ne un?,O,8
+Jaja; molt bona capità.,C,32
+Sóc en Zavis; el teu tinent.,O,33
+Era broma Zavis; mai m'oblidaria de tu.,35,M
+...,43,F
+I de la nostra tasca te'n recordes?,O,36
+[Mentir] Clar que si. Però i tu?,38,C
+La veritat és que no.,42,F
+Hem de portar uns subministres a la capital de 571-/9A.,C,39
+Tenim el problema que l'espai orbital és una mica perillós.,C,40
+Necessitaríem un mòdul d'armament per defensar-nos.,C,41
+Tens els diners per comprar-ne un?,O,9
+Em comences a preocupar una mica.,C,43
+Et recordo que som transportistes espacials.,C,44
+Ens han encarregat portar uns suministres a la capital de 571-/9A.,C,45
+Tenim el problema que l'espai aeri és molt perillós i necessiteriem un mòdul d'armamaent.,C,46
+Podries anar a comprar-ne un?,O,9
+Capità; estàs bé?,C,48
+Saps qui ets?,C,49
+On estem?,C,50
+Que hem de fer?,O,36
