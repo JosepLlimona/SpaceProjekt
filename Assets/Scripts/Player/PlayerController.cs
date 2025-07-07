@@ -94,6 +94,11 @@ public class PlayerController : MonoBehaviour
             {
                 playerAnim.SetFloat("X", rb.velocity.x);
                 playerAnim.SetFloat("Y", rb.velocity.y);
+                playerAnim.SetBool("isWalking", true);
+            }
+            else
+            {
+                playerAnim.SetBool("isWalking", false);
             }
         }
     }

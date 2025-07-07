@@ -9634,6 +9634,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1120579817001972368, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1723028275054913824, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3180628365468025267, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
       propertyPath: m_ActionEvents.Array.size
       value: 9
@@ -9758,6 +9766,26 @@ PrefabInstance:
       propertyPath: inventoryAnim
       value: 
       objectReference: {fileID: 241171589}
+    - target: {fileID: 4766477356285059017, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766477356285059017, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766477356285059017, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766477356285059017, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.163
+      objectReference: {fileID: 0}
+    - target: {fileID: 4766477356285059017, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.076
+      objectReference: {fileID: 0}
     - target: {fileID: 5601630285978108235, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
       propertyPath: m_Size.x
       value: 0.12
