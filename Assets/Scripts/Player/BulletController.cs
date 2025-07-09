@@ -6,7 +6,7 @@ public class BulletController : MonoBehaviour
 {
 
     Rigidbody2D rb;
-    float speed = 5f;
+    float speed = 3f;
     public Vector2 dir;
     float damage = 1f;
 

@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 {
 
     [Header("Movment")]
-    [SerializeField] float speed = 5f;
+    [SerializeField] float speed = 1f;
     [SerializeField] bool canRun = true;
     [SerializeField] float dashingPower = 24f;
     [SerializeField] float dashingTime = 0.2f;
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     InventoryController inventory;
     [SerializeField] Animator inventoryAnim;
-    bool canAct = true;
+    public bool canAct = true;
 
 
 
@@ -105,7 +105,8 @@ public class PlayerController : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
-        dir = context.ReadValue<Vector2>();
+        if (canAct)
+            dir = context.ReadValue<Vector2>();
     }
 
     public void Look(InputAction.CallbackContext context)
@@ -126,14 +127,14 @@ public class PlayerController : MonoBehaviour
         {
             if (context.performed)
             {
-                speed = 10f;
+                speed = 2f;
                 isRunning = true;
             }
             if (context.canceled)
             {
                 if (isRunning)
                 {
-                    speed = 5f;
+                    speed = 1f;
                 }
             }
         }
@@ -304,6 +305,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed && canTalk)
         {
             isTalking = true;
+            canAct = false;
             Debug.Log("Estic parlant");
             npc.StartConversation();
         }

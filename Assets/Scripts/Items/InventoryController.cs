@@ -25,7 +25,7 @@ public class InventoryController : MonoBehaviour
     public PlayerController player;
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         if (Input.GetKeyDown(KeyCode.H))
         {
@@ -67,7 +67,7 @@ public class InventoryController : MonoBehaviour
             AddItem(items[7]);
             Debug.Log(GetAvailableSpace());
         }
-    }
+    }*/
 
     public void AddItem(GameObject item)
     {

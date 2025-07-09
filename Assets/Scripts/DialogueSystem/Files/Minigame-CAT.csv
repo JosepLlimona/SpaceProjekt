@@ -1,0 +1,5 @@
+Vols fer una partida de DeathRoll,O,1
+Si [Apostar 10],3,M
+No,4,F
+Guay. Comencem,F,-2
+Vaja. Torna si vols jugar!,F,0

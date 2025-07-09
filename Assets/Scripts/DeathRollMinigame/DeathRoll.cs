@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DeathRoll : MonoBehaviour
@@ -18,6 +19,11 @@ public class DeathRoll : MonoBehaviour
 
     private int currentMax = 1000;
     private bool canRoll = true;
+
+    private void Start()
+    {
+        GameObject.Find("Player").GetComponent<PlayerController>().canAct = false;
+    }
     public void Roll()
     {
         if (canRoll)
@@ -41,10 +47,18 @@ public class DeathRoll : MonoBehaviour
                 actionList.text = tempText;
 
                 winnerText.text = "LOSER";
-                return;
+                StartCoroutine(Win());
             }
-            StartCoroutine(IATurn());
+            else
+                StartCoroutine(IATurn());
         }
+    }
+
+    private IEnumerator Win()
+    {
+        yield return new WaitForSeconds(1.5f);
+        GameObject.Find("Player").GetComponent<PlayerController>().canAct = true;
+        SceneManager.UnloadSceneAsync(4);
     }
 
     private IEnumerator IATurn()
@@ -71,6 +85,11 @@ public class DeathRoll : MonoBehaviour
             actionList.text = tempText;
 
             winnerText.text = "Winner";
+            yield return new WaitForSeconds(1.5f);
+            GameObject.Find("Player").GetComponent<PlayerController>().GainMoney(50);       
+            GameObject.Find("Player").GetComponent<PlayerController>().canAct = true;
+
+            SceneManager.UnloadSceneAsync(4);
         }
         else
         {

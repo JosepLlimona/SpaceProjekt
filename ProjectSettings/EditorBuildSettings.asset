@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/SpaceFightingRoom.unity
     guid: f983dce0204a031448ff331e6b9e0885
   - enabled: 1
-    path: Assets/Scenes/PlayerScene.unity
-    guid: 861896c663a81424487aeaec9534677d
+    path: Assets/Scenes/SpaceStationScene.unity
+    guid: 647b686fa863010409d3ace71f64486d
+  - enabled: 1
+    path: Assets/Scenes/DeathRollScene.unity
+    guid: 7f1401b8335c62a4d881d300c3a04777
   m_configObjects: {}

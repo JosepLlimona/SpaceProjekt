@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DialogueController : MonoBehaviour
 {
@@ -104,7 +105,12 @@ public class DialogueController : MonoBehaviour
                     }
                     else if (ending == -2)
                     {
-                        Debug.Log("Entrant minijoc");
+                        if (player.money >= 10)
+                        {
+                            player.GainMoney(-10);
+                            player.canAct = false;
+                            SceneManager.LoadScene(4, LoadSceneMode.Additive);
+                        }
                     }
                     else if (ending == -3)
                     {
@@ -116,6 +122,7 @@ public class DialogueController : MonoBehaviour
                     }
                     animator.SetBool("IsInDialog", false);
                     player.isTalking = false;
+                    player.canAct = true;
                     npc.ChangeFile();
                     yield break;
                 default:
@@ -136,6 +143,7 @@ public class DialogueController : MonoBehaviour
         while (isInChoices)
         {
             GameObject choiceTmp = Instantiate(choiceItem);
+            choiceTmp.GetComponent<ChoiceController>().chocieText = script[i];
             i++;
             choiceTmp.GetComponent<ChoiceController>().nextLine = script[i];
             choiceTmp.GetComponent<ChoiceController>().dialogueController = this;
