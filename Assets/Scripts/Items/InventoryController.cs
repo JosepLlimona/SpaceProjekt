@@ -69,8 +69,9 @@ public class InventoryController : MonoBehaviour
         }
     }*/
 
-    public void AddItem(GameObject item)
+    public void AddItem(int itemIdx)
     {
+        GameObject item = items[itemIdx];
         GameObject itemIcon = null;
         if (item.GetComponent<Item>().ReturnType() == "Consum")
         {

@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SpaceFightingController : MonoBehaviour
 {
     GameController controller;
     ModuleSpawner spawner;
-    SceneController sceneController;
 
     int maxWeapons = 0;
     int weapons = 0;
@@ -57,36 +57,59 @@ public class SpaceFightingController : MonoBehaviour
                 StartCoroutine(WriteWarning("Spawner torbat"));
             }
         }
-        if (sceneController == null)
-        {
-            sceneController = GameObject.Find("SceneController").GetComponent<SceneController>();
-        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(WriteWarning("Estic entrant"));
-        mainCanvas.enabled = true;
-        winCanvas.enabled = false;
+        if (controller.isInRogueLite)
+        {
+            StartCoroutine(WriteWarning("Estic entrant"));
+            mainCanvas.enabled = true;
+            winCanvas.enabled = false;
 
-        spawner.spawnShip();
-        maxWeapons = controller.GetShipWeapons();
-        maxShields = controller.GetShipShield();
-        weapons = maxWeapons;
-        shields = maxShields;
+            spawner.spawnShip();
+            maxWeapons = controller.GetShipWeapons();
+            maxShields = controller.GetShipShield();
+            weapons = maxWeapons;
+            shields = maxShields;
 
-        maxActions = (weapons + shields) + 3;
-        actions = maxActions;
-        RefreshActionNumber();
-        actionListText.text = "";
-        actionListTextIA.text = "";
-        warningText.text = "";
-        IAActions();
-        playerHealth = controller.GetShipHealth();
-        RefreshPlayerHealthNumber();
-        IAHealth = controller.IALevel + 1;
-        RefreshIAHelathNumber();
+            maxActions = (weapons + shields) + 3;
+            actions = maxActions;
+            RefreshActionNumber();
+            actionListText.text = "";
+            actionListTextIA.text = "";
+            warningText.text = "";
+            IAActions();
+            playerHealth = controller.GetShipHealth();
+            RefreshPlayerHealthNumber();
+            IAHealth = controller.IALevel + 1;
+            RefreshIAHelathNumber();
+        }
+        else
+        {
+            mainCanvas.enabled = true;
+            winCanvas.enabled = false;
+
+            spawner.spawnMainShip();
+            maxWeapons = controller.mainShipWeapon;
+            maxShields = controller.mainShipShield;
+            weapons = maxWeapons;
+            shields = maxShields;
+
+            maxActions = (weapons + shields) + 3;
+            actions = maxActions;
+            RefreshActionNumber();
+            actionListText.text = "";
+            actionListTextIA.text = "";
+            warningText.text = "";
+            controller.IALevel = 2;
+            IAActions();
+            playerHealth = controller.GetMainShipHealth();
+            RefreshPlayerHealthNumber();
+            IAHealth = controller.IALevel + 1;
+            RefreshIAHelathNumber();
+        }
     }
 
     public void AddAction(string type)
@@ -187,7 +210,18 @@ public class SpaceFightingController : MonoBehaviour
         actionListTextIA.text = "";
         for (int i = 0; i < actionsListIA.Count; i++)
         {
-            actionListTextIA.text += "- " + actionsListIA[i] + "\n";
+            if (actionsListIA[i] == "Attack")
+            {
+                actionListTextIA.text += "- Atacar\n";
+            }
+            else if (actionsListIA[i] == "Defense")
+            {
+                actionListTextIA.text += "- Defensar\n";
+            }
+            else if (actionsListIA[i] == "Wait")
+            {
+                actionListTextIA.text += "- Esperar\n";
+            }
         }
         yield return new WaitForSeconds(1f);
         Debug.Log("despres del wait");
@@ -249,8 +283,9 @@ public class SpaceFightingController : MonoBehaviour
         RefreshPlayerHealthNumber();
         if (playerHealth <= 0)
         {
-            controller.DeleteFile();
-            sceneController.LoadSceneSingle(0);
+            if (controller.isInRogueLite)
+                controller.DeleteFile();
+            SceneManager.LoadScene(0, LoadSceneMode.Single);
         }
     }
 
@@ -298,37 +333,45 @@ public class SpaceFightingController : MonoBehaviour
     }
     private void GivePrize()
     {
-        spawner.DeSpawnShip();
-        controller.IALevel++;
-        mainCanvas.enabled = false;
-        winCanvas.enabled = true;
-        for (int i = 0; i < 3; i++)
+        if (controller.isInRogueLite)
         {
-            int firstPrize = Random.Range(0, 3);
-            if (firstPrize == 0)
+            spawner.DeSpawnShip();
+            controller.IALevel++;
+            mainCanvas.enabled = false;
+            winCanvas.enabled = true;
+            for (int i = 0; i < 3; i++)
             {
-                var bColors = priceButtons[i].colors;
-                bColors.normalColor = Color.green;
-                priceButtons[i].colors = bColors;
-                priceButtons[i].GetComponentInChildren<TMP_Text>().text = "Escut";
-                priceButtons[i].onClick.AddListener(() => { GainPrize("Shield"); });
+                int firstPrize = Random.Range(0, 3);
+                if (firstPrize == 0)
+                {
+                    var bColors = priceButtons[i].colors;
+                    bColors.normalColor = Color.green;
+                    priceButtons[i].colors = bColors;
+                    priceButtons[i].GetComponentInChildren<TMP_Text>().text = "Escut";
+                    priceButtons[i].onClick.AddListener(() => { GainPrize("Shield"); });
+                }
+                else if (firstPrize == 1)
+                {
+                    var bColors = priceButtons[i].colors;
+                    bColors.normalColor = Color.red;
+                    priceButtons[i].colors = bColors;
+                    priceButtons[i].GetComponentInChildren<TMP_Text>().text = "Canyo";
+                    priceButtons[i].onClick.AddListener(() => { GainPrize("Weapon"); });
+                }
+                else if (firstPrize == 2)
+                {
+                    var bColors = priceButtons[i].colors;
+                    bColors.normalColor = new Color(255, 190, 0, 255);
+                    priceButtons[i].colors = bColors;
+                    priceButtons[i].GetComponentInChildren<TMP_Text>().text = "Passadís";
+                    priceButtons[i].onClick.AddListener(() => { GainPrize("Hallway"); });
+                }
             }
-            else if (firstPrize == 1)
-            {
-                var bColors = priceButtons[i].colors;
-                bColors.normalColor = Color.red;
-                priceButtons[i].colors = bColors;
-                priceButtons[i].GetComponentInChildren<TMP_Text>().text = "Canyo";
-                priceButtons[i].onClick.AddListener(() => { GainPrize("Weapon"); });
-            }
-            else if (firstPrize == 2)
-            {
-                var bColors = priceButtons[i].colors;
-                bColors.normalColor = new Color(255, 190, 0, 255);
-                priceButtons[i].colors = bColors;
-                priceButtons[i].GetComponentInChildren<TMP_Text>().text = "Passadís";
-                priceButtons[i].onClick.AddListener(() => { GainPrize("Hallway"); });
-            }
+        }
+        else
+        {
+            Debug.Log("Canviant historia");
+            controller.changeHistoryMoment();
         }
     }
 
@@ -346,6 +389,6 @@ public class SpaceFightingController : MonoBehaviour
         {
             spawner.AddModuleAmount("Passadis", 1);
         }
-        sceneController.LoadSceneSingle(1);
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
     }
 }

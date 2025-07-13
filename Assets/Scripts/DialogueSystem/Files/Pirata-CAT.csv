@@ -1,0 +1,11 @@
+Necessites algo?,O,1
+Estic buscant una mercaderia. Sabeu algo?,2,F
+Es probable que la tinguem nosaltres.,C,3
+Que donaras a canvi?,O,4
+[Check] No volgue un enemic més.,7-8,MCM
+Que tal aixo? [100 monedes],9,M
+La vostra vida!,10,F
+Vale; vale. Aqui tens. I no tornis més,F,-10
+Jajaja. No tindrem enemics si acabem amb tu.,F,-3
+Ara parlem el mateix idioma.,F,-10
+Que aixi sigui!,F,-3

@@ -6,7 +6,7 @@ public class BulletControllerEnemy : MonoBehaviour
 {
 
     Rigidbody2D rb;
-    float speed = 5f;
+    float speed = 3f;
     public Vector2 dir;
 
     // Start is called before the first frame update

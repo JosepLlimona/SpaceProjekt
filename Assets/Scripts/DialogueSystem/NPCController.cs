@@ -5,8 +5,8 @@ using UnityEngine;
 public class NPCController : MonoBehaviour
 {
     [SerializeField]
-    TextAsset[] dialogueFile;
-    int i = 0;
+    public List<TextAsset> dialogueFile;
+    public int i = 0;
 
     [SerializeField]
     DialogueController dialogueController;
@@ -14,7 +14,11 @@ public class NPCController : MonoBehaviour
 
     private void Start()
     {
-        if(dialogueController != null)
+        if (this.gameObject.name == "Zarvis")
+        {
+            GameObject.Find("GameController").GetComponent<GameController>().zarvis = this.gameObject;
+        }
+        if (dialogueController != null)
         {
             dialogueController = GameObject.Find("DialogueContoller").GetComponent<DialogueController>();
         }
@@ -29,7 +33,7 @@ public class NPCController : MonoBehaviour
 
     public void ChangeFile()
     {
-        if(i<(dialogueFile.Length - 1))
+        if(i<(dialogueFile.Count - 1))
         {
             i++;
         }

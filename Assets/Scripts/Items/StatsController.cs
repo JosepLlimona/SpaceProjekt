@@ -57,7 +57,7 @@ public class StatsController : MonoBehaviour
         }
     }
 
-    private void RefreshText()
+    public void RefreshText()
     {
         for (int i = 0; i < statNumbers.Count; i++)
         {

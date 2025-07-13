@@ -18,22 +18,26 @@ public class IAController : MonoBehaviour
             covers.Add(co);
             availableCovers.Add(false);
         }
-        Debug.Log("Nº Covers: " + covers.Count);
     }
 
     public void StartCombat()
     {
-        for (int i = 0; i<enemies.Count; i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
+            var boxtrigger = enemies[i].GetComponent<CircleCollider2D>();
+            if (boxtrigger != null)
+            {
+                boxtrigger.enabled = false;
+            }
+            enemies[i].GetComponentInChildren<Canvas>().enabled = true;
+            enemies[i].tag = "Enemy";
             enemies[i].StartHostile();
         }
     }
 
     public void AddEnemy(EnemyController enemy)
     {
-        Debug.Log("Afegint " + enemy.gameObject.name);
         enemies.Add(enemy);
-        Debug.Log("Nº Enemies: " + enemies.Count);
     }
 
     public void FinishTurn(EnemyController enemy)
@@ -43,13 +47,11 @@ public class IAController : MonoBehaviour
             EnemyController tmp = enemies[0];
             enemies.RemoveAt(0);
             enemies.Add(tmp);
-            Debug.Log(enemy.gameObject.name + ": Finished turn and rotated list.");
         }
     }
 
     public bool AskToAct(EnemyController enemy)
     {
-        Debug.Log("Pregunta: " + enemy.gameObject.name + ", Primer llista: " + enemies[0].gameObject.name);
         if (enemy == enemies[0])
         {
             return true;

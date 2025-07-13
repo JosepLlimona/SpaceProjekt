@@ -27,11 +27,13 @@ public class EnemyController : MonoBehaviour
     Vector3 coverPos;
     GameObject coverObject;
     Vector2 last = Vector2.zero;
+    Animator animator;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         iaController = GameObject.Find("IAController").GetComponent<IAController>();
         iaController.AddEnemy(this);
@@ -48,10 +50,14 @@ public class EnemyController : MonoBehaviour
     {
         if (isMoving)
         {
-            Vector2 movePos = Vector2.MoveTowards(transform.position, coverPos, 0.2f);
+            animator.SetBool("isWalking", true);
+            Vector2 movePos = Vector2.MoveTowards(transform.position, coverPos, 0.05f);
             rb.MovePosition(movePos);
+            animator.SetFloat("X", movePos.x);
+            animator.SetFloat("Y", movePos.y);
             if (movePos == last)
             {
+                animator.SetBool("isWalking", false);
                 isMoving = false;
                 isCovered = true;
                 transform.localScale = new Vector3(1f, 0.8f, 1f);

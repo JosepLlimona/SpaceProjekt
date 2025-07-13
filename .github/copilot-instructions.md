@@ -2,7 +2,7 @@
 - Project name: SpaceProjekt
 - Unity version: Unity 2022.3.47f1
 - Active game object:
-  - Name: Inventory
+  - Name: GameController
   - Tag: Untagged
-  - Layer: UI
+  - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

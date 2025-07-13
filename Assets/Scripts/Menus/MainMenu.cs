@@ -7,20 +7,18 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField]
     GameController gameController;
-    [SerializeField]
-    SceneController sceneController;
     [SerializeField] Canvas mainCanvas;
     [SerializeField] Canvas infoCanvas;
 
     public void NewGame()
     {
-        sceneController.LoadSceneSingle(3);
+        gameController.changeHistoryMoment();
     }
     public void RogueLiteNew()
     {
         gameController.DeleteFile();
         gameController.isInRogueLite = true;
-        sceneController.LoadSceneSingle(1);
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
     }
     public void RogueLiteContinue()
     {
@@ -28,7 +26,7 @@ public class MainMenu : MonoBehaviour
         {
 
             gameController.isInRogueLite = true;
-            sceneController.LoadSceneSingle(1);
+            SceneManager.LoadScene(1, LoadSceneMode.Single);
         }
     }
 

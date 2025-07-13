@@ -38,7 +38,6 @@ public class DialogueController : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.Log("Buscant player");
             GameObject.Find("Player").GetComponent<PlayerController>();
         }
     }
@@ -50,7 +49,6 @@ public class DialogueController : MonoBehaviour
         animator.SetBool("IsInDialog", true);
         if (dialogueFile == null)
         {
-            Debug.LogError("No has ficat un arxiu");
             return;
         }
 
@@ -66,25 +64,29 @@ public class DialogueController : MonoBehaviour
         {
             canContinue = false;
             StopCoroutine("TextAnim");
-            StartCoroutine(TextAnim(script[i]));
-            while (!canContinue)
-            {
-                yield return null;
-            }
-            Debug.Log("He sortit");
+            string textToSay = script[i];
             canContinue = false;
             i++;
             switch (script[i])
             {
                 case "C":
+                    StartCoroutine(TextAnim(textToSay));
+                    while (!canContinue)
+                    {
+                        yield return null;
+                    }
                     i++;
                     int next = int.Parse(script[i]);
                     break;
                 case "O":
+                    StartCoroutine(TextAnim(textToSay));
+                    while (!canContinue)
+                    {
+                        yield return null;
+                    }
                     i++;
                     int nextChoices = int.Parse(script[i]);
                     i = nextChoices * 3;
-                    Debug.Log("i: " + i);
                     yield return StartCoroutine(ManageChoices(script));
                     break;
                 case "F":
@@ -92,41 +94,146 @@ public class DialogueController : MonoBehaviour
                     int ending = int.Parse(script[i]);
                     if (ending == 0)
                     {
-                        Debug.Log("Final del dialeg");
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
                     }
                     else if (ending > 0)
                     {
-                        Debug.Log("Guanayt: " + ending);
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
                         player.GainMoney(ending);
                     }
                     else if (ending == -1)
                     {
-                        Debug.Log("Entrant botiga");
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
                     }
                     else if (ending == -2)
                     {
                         if (player.money >= 10)
                         {
+                            StartCoroutine(TextAnim(textToSay));
+                            while (!canContinue)
+                            {
+                                yield return null;
+                            }
                             player.GainMoney(-10);
                             player.canAct = false;
                             SceneManager.LoadScene(4, LoadSceneMode.Additive);
                         }
+                        else
+                        {
+                            textToSay = "No tens suficients diners.";
+                            StartCoroutine(TextAnim(textToSay));
+                            while (!canContinue)
+                            {
+                                yield return null;
+                            }
+                        }
                     }
                     else if (ending == -3)
                     {
-                        Debug.Log("Iniciant combat");
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
+                        player.StartCombat();
                     }
                     else if (ending == -4)
                     {
-                        Debug.Log("Conseguint objecte");
+                        if (player.money >= 100)
+                        {
+                            StartCoroutine(TextAnim(textToSay));
+                            while (!canContinue)
+                            {
+                                yield return null;
+                            }
+                            player.GainModule();
+                        }
+                        else
+                        {
+                            textToSay = "No tens suficients diners.";
+                            StartCoroutine(TextAnim(textToSay));
+                            while (!canContinue)
+                            {
+                                yield return null;
+                            }
+                        }
                     }
-                    animator.SetBool("IsInDialog", false);
+                    else if(ending == -5)
+                    {
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
+                        player.ObtainWeapon(2);
+                    }
+                    else if (ending == -6)
+                    {
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
+                        player.ObtainWeapon(1);
+                    }
+                    else if (ending == -7)
+                    {
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
+                        player.changeHistoryMoment();
+                    }
+                    else if (ending == -8)
+                    {
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
+                        SceneManager.LoadScene(2, LoadSceneMode.Single);
+                    }
+                    else if(ending == -9)
+                    {
+                        if (!player.hasMercadery)
+                        {
+                            textToSay = "Encara no tens la mercaderia.";
+                        }
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
+                        player.changeHistoryMoment();
+                    }
+                    else if(ending == -10)
+                    {
+                        StartCoroutine(TextAnim(textToSay));
+                        while (!canContinue)
+                        {
+                            yield return null;
+                        }
+                        player.hasMercadery = true;
+                    }
+                        animator.SetBool("IsInDialog", false);
                     player.isTalking = false;
                     player.canAct = true;
                     npc.ChangeFile();
                     yield break;
                 default:
-                    Debug.Log(script[i]);
                     break;
             }
         }
@@ -136,7 +243,6 @@ public class DialogueController : MonoBehaviour
     {
         bool isInChoices = true;
         //i++;
-        Debug.Log("Entro MC");
         DeleteOptions();
         textSquare.gameObject.SetActive(false);
         choiceBox.SetActive(true);
@@ -191,14 +297,12 @@ public class DialogueController : MonoBehaviour
             {
                 string[] separator = script[i].Split('-');
                 price = int.Parse(separator[1]);
-                Debug.Log("Preu: " + price);
                 choiceTmp.GetComponent<ChoiceController>().hasToPay = true;
             }
             else if (script[i].Contains("FB"))
             {
                 string[] separator = script[i].Split('-');
                 price = int.Parse(separator[1]);
-                Debug.Log("Preu: " + price);
                 choiceTmp.GetComponent<ChoiceController>().hasToPay = true;
                 isInChoices = false;
             }
@@ -215,7 +319,6 @@ public class DialogueController : MonoBehaviour
 
     public void ChooseOption(string nextLine, bool hasCheck, bool hasToPay)
     {
-        Debug.Log("He d'anar a " + nextLine);
         hasDecided = true;
         if (hasCheck)
         {
@@ -297,7 +400,7 @@ public class DialogueController : MonoBehaviour
 
     public void DeleteOptions()
     {
-        foreach(Transform child in choiceBox.transform.GetChild(0))
+        foreach (Transform child in choiceBox.transform.GetChild(0))
         {
             Destroy(child.gameObject);
         }

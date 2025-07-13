@@ -1,0 +1,5 @@
+Vols comprar un modul d'armament?,O,1
+Si,3,M
+No,4,F
+Gracies per la seva compra,F,-4
+Torni més tard.,F,0

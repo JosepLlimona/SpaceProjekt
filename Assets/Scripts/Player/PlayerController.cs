@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-
     [Header("Movment")]
     [SerializeField] float speed = 1f;
     [SerializeField] bool canRun = true;
@@ -56,8 +56,13 @@ public class PlayerController : MonoBehaviour
     InventoryController inventory;
     [SerializeField] Animator inventoryAnim;
     public bool canAct = true;
-
-
+    [SerializeField]
+    GameController gameController;
+    [SerializeField]
+    IAController iaController;
+    public bool hasMercadery;
+    [SerializeField]
+    StatsController statsController;
 
     // Start is called before the first frame update
     void Start()
@@ -70,18 +75,27 @@ public class PlayerController : MonoBehaviour
             shootTime = 0.1f;
         }
 
-        maxHealth = 10 + GetModifier(constitution);
-        health = maxHealth;
-        healthBar.maxValue = maxHealth;
-        healthBar.value = health;
-
         if (inventory == null)
         {
             inventory = GameObject.Find("Inventory").GetComponent<InventoryController>();
         }
+        if (gameController == null)
+        {
+            gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        }
 
         inventory.changeMoneyAmount(money);
         inventory.player = this;
+        gameController.LoadStats(this);
+        statsController.RefreshText();
+        foreach(int item in gameController.playerInventory)
+        {
+            inventory.AddItem(item);
+        }
+        maxHealth = 10 + GetModifier(constitution);
+        health = maxHealth;
+        healthBar.maxValue = maxHealth;
+        healthBar.value = health;
     }
 
     private void FixedUpdate()
@@ -206,7 +220,6 @@ public class PlayerController : MonoBehaviour
         GameObject tmpBullet = Instantiate(bullet, bulletSpawn.transform.position, bulletSpawn.transform.rotation);
         Vector2 dir = (mousePos - (Vector2)bulletSpawn.transform.position).normalized;
         tmpBullet.GetComponent<BulletController>().dir = dir;
-        Debug.Log("Final Damage: " + finalDamage);
         tmpBullet.GetComponent<BulletController>().SetDamage(finalDamage);
         yield return new WaitForSeconds(shootTime);
         canShoot = true;
@@ -306,7 +319,6 @@ public class PlayerController : MonoBehaviour
         {
             isTalking = true;
             canAct = false;
-            Debug.Log("Estic parlant");
             npc.StartConversation();
         }
     }
@@ -346,7 +358,6 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.tag == "Cover")
         {
-            Debug.Log("Entro");
             isCovered = true;
             transform.localScale = new Vector3(1f, 0.8f, 1f);
         }
@@ -368,10 +379,11 @@ public class PlayerController : MonoBehaviour
         if (isCovered || isDashing)
             return;
         health -= (amountLost - defense);
+        Debug.Log("Perdent vida");
         healthBar.value = health;
         if (health <= 0)
         {
-            //GAME OVER
+            SceneManager.LoadScene(0, LoadSceneMode.Single);
         }
 
     }
@@ -477,6 +489,49 @@ public class PlayerController : MonoBehaviour
     public void changeDefense(float amount)
     {
         defense += amount;
-        Debug.Log("Defensa: " + defense);
+    }
+
+    public void GainModule()
+    {
+        GainMoney(-100);
+        gameController.AddAmountInventory(4, 1);
+    }
+
+    public void changeHistoryMoment()
+    {
+        gameController.changeHistoryMoment();
+    }
+
+    public void SaveStats()
+    {
+        gameController.SaveStats(health, strenght, dexterity, constitution, inteligence, charisma, luck);
+    }
+
+    public void loadStats(float health, int strenght, int dexterity, int constitution, int inteligence, int charisma, int luck)
+    {
+        this.health = health;
+        this.strenght = strenght;
+        this.dexterity = dexterity;
+        this.constitution = constitution;
+        this.inteligence = inteligence;
+        this.charisma = charisma;
+        this.luck = luck;
+    }
+
+    public void ObtainWeapon(int type)
+    {
+        if (type == 1)
+        {
+            inventory.AddItem(1);
+        }
+        else if (type == 2)
+        {
+            inventory.AddItem(3);
+        }
+    }
+
+    public void StartCombat()
+    {
+        iaController.StartCombat();
     }
 }

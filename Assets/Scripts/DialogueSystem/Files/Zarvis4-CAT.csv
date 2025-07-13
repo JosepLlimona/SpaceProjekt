@@ -1,0 +1,8 @@
+Sembla que estem tots bé.,C,1
+Pero hem perdut part de la mercaderia.,C,2
+Capità; has de recuperar-la sigui com sigui!,C,3
+Pot ser perillos. Que prefereixes; una espasa o la pistola?,O,4
+L'espasa,6,M
+La pistola,7,F
+Aqui tens.,F,-6
+Aqui tens.,F,-5

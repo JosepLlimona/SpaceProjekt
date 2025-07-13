@@ -45,6 +45,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInRogueLite: 0
+  moduleInventory: 000000000000000000000000000000000000000000000000
+  actualHistoryMoment: 1
+  mainShipPosition:
+  - {x: 3, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
+  - {x: 1, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 1, y: -1, z: 0}
+  - {x: 2, y: -1, z: 0}
+  mainShip:
+  - {fileID: 3599930217086626947, guid: bda2bc8b763a97045bb42144bd5e118f, type: 3}
+  - {fileID: 3599930217086626947, guid: 611daead84c6717498c4b5eaedcf7533, type: 3}
+  - {fileID: 3599930217086626947, guid: 611daead84c6717498c4b5eaedcf7533, type: 3}
+  - {fileID: 3599930217086626947, guid: 7ce900f69547dfd4292d6d33b8593bad, type: 3}
+  - {fileID: 3599930217086626947, guid: b4d54c4ef3114ef4e9cb2b047f25f235, type: 3}
+  - {fileID: 3599930217086626947, guid: c7dbf19436c8eb14dadd96ae35e2ed06, type: 3}
+  mainShipWeapon: 0
+  mainShipShield: 0
+  firstTimeBuilding: 1
   shipPosition: []
   ship: []
-  modulesAmount: 010000000100000001000000010000000100000001000000
+  modulesAmount: 640000006400000064000000640000006400000064000000
+  ShipWeapon: 0
+  ShipShield: 0
+  IALevel: 1
+  zarvis: {fileID: 0}
+  newZarvisText: {fileID: 4900000, guid: fb430f55c0859124b9ba4a456d516bc7, type: 3}

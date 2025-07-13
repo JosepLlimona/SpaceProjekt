@@ -24,8 +24,6 @@ public class ModuleSpawner : MonoBehaviour
 
     [SerializeField]
     private GameController gameController;
-    [SerializeField]
-    private SceneController sceneController;
 
     //Checkers
     bool hasCabin = false;
@@ -43,30 +41,36 @@ public class ModuleSpawner : MonoBehaviour
         {
             gameController = GameObject.Find("GameController").GetComponent<GameController>();
         }
-        if (sceneController == null)
-        {
-            sceneController = GameObject.Find("SceneController").GetComponent<SceneController>();
-        }
     }
 
     private void Start()
     {
-        gameController.LoadShipFile();
+        if (gameController.isInRogueLite)
+        {
+            gameController.LoadShipFile();
 
-        if (modules.Count != gameController.modulesAmount.Count)
-        {
-        }
-        if (!isInFight)
-        {
-            warningText.text = "";
-            spawnShip();
-            RefershAmounts();
-            if (gameController.isInRogueLite)
+            if (modules.Count != gameController.modulesAmount.Count)
             {
+            }
+            if (!isInFight)
+            {
+                warningText.text = "";
+                spawnShip();
+                RefershAmounts();
+                startCombatButton.GetComponentInChildren<TMP_Text>().text = "Començar combat";
                 startCombatButton.SetActive(true);
             }
-            else
-                startCombatButton.SetActive(false);
+        }
+        else
+        {
+            if (!isInFight)
+            {
+                warningText.text = "";
+                spawnMainShip();
+                RefershMainAmounts();
+                startCombatButton.GetComponentInChildren<TMP_Text>().text = "Enlairar";
+                startCombatButton.SetActive(true);
+            }
         }
     }
 
@@ -135,7 +139,7 @@ public class ModuleSpawner : MonoBehaviour
     {
         if (ship.Count > 0)
             return;
-       
+
         if (gameController.ship.Count > 0)
         {
             this.ship.Clear();
@@ -153,7 +157,7 @@ public class ModuleSpawner : MonoBehaviour
                 {
                     hasCabin = true;
                 }
-                else if(gameController.ship[i].name == "Motor")
+                else if (gameController.ship[i].name == "Motor")
                 {
                     hasEngine = true;
                 }
@@ -188,39 +192,79 @@ public class ModuleSpawner : MonoBehaviour
 
     public void AddModule(GameObject module, Vector3 mousePos)
     {
-        int idx = modules.IndexOf(module);
-        if (gameController.modulesAmount[idx] > 0)
+        if (gameController.isInRogueLite)
         {
-            GameObject moduleTmp = Instantiate(module, mousePos, Quaternion.identity);
-            shipPosition.Add(mousePos);
-            ship.Add(module);
-            shipModules.Add(moduleTmp);
-            if (module.GetComponent<Module>().type == "Cabin")
+            int idx = modules.IndexOf(module);
+            if (gameController.modulesAmount[idx] > 0)
             {
-                hasCabin = true;
+                GameObject moduleTmp = Instantiate(module, mousePos, Quaternion.identity);
+                shipPosition.Add(mousePos);
+                ship.Add(module);
+                shipModules.Add(moduleTmp);
+                if (module.GetComponent<Module>().type == "Cabin")
+                {
+                    hasCabin = true;
+                }
+                else if (module.GetComponent<Module>().type == "Engine")
+                {
+                    hasEngine = true;
+                }
+                else if (module.GetComponent<Module>().type == "Landing")
+                {
+                    hasLanding = true;
+                }
+                else if (module.GetComponent<Module>().type == "Weapon")
+                {
+                    weapons++;
+                }
+                else if (module.GetComponent<Module>().type == "Shield")
+                {
+                    shields++;
+                }
+                gameController.modulesAmount[idx]--;
+                RefershAmounts();
             }
-            else if (module.GetComponent<Module>().type == "Engine")
+            else
             {
-                hasEngine = true;
+                StartCoroutine(WriteWarning("No et queden moduls"));
             }
-            else if (module.GetComponent<Module>().type == "Landing")
-            {
-                hasLanding = true;
-            }
-            else if (module.GetComponent<Module>().type == "Weapon")
-            {
-                weapons++;
-            }
-            else if (module.GetComponent<Module>().type == "Shield")
-            {
-                shields++;
-            }
-            gameController.modulesAmount[idx]--;
-            RefershAmounts();
         }
         else
         {
-            StartCoroutine(WriteWarning("No et queden moduls"));
+            int idx = modules.IndexOf(module);
+            if (gameController.moduleInventory[idx] > 0)
+            {
+                GameObject moduleTmp = Instantiate(module, mousePos, Quaternion.identity);
+                shipPosition.Add(mousePos);
+                ship.Add(module);
+                shipModules.Add(moduleTmp);
+                if (module.GetComponent<Module>().type == "Cabin")
+                {
+                    hasCabin = true;
+                }
+                else if (module.GetComponent<Module>().type == "Engine")
+                {
+                    hasEngine = true;
+                }
+                else if (module.GetComponent<Module>().type == "Landing")
+                {
+                    hasLanding = true;
+                }
+                else if (module.GetComponent<Module>().type == "Weapon")
+                {
+                    weapons++;
+                }
+                else if (module.GetComponent<Module>().type == "Shield")
+                {
+                    shields++;
+                }
+                gameController.moduleInventory[idx]--;
+                RefershMainAmounts();
+            }
+            else
+            {
+                StartCoroutine(WriteWarning("No et queden moduls"));
+            }
         }
     }
 
@@ -244,20 +288,40 @@ public class ModuleSpawner : MonoBehaviour
 
     public void SaveShip()
     {
-        if (hasCabin && hasEngine && hasLanding)
+        if (gameController.isInRogueLite)
         {
-            gameController.ClearList();
-            for (int i = 0; i < ship.Count; i++)
+            if (hasCabin && hasEngine && hasLanding)
             {
-                gameController.AddModule(ship[i], shipPosition[i]);
+                gameController.ClearList();
+                for (int i = 0; i < ship.Count; i++)
+                {
+                    gameController.AddModule(ship[i], shipPosition[i]);
+                }
+                gameController.ShipWeapon = weapons;
+                gameController.ShipShield = shields;
+                gameController.SaveShipFile();
             }
-            gameController.ShipWeapon = weapons;
-            gameController.ShipShield = shields;
-            gameController.SaveShipFile();
+            else
+            {
+                StartCoroutine(WriteWarning("Et falten parts necessaries"));
+            }
         }
         else
         {
-            StartCoroutine(WriteWarning("Et falten parts necessaries"));
+            if (hasCabin && hasEngine && hasLanding)
+            {
+                gameController.ClearListMain();
+                for (int i = 0; i < ship.Count; i++)
+                {
+                    gameController.AddModuleMain(ship[i], shipPosition[i]);
+                }
+                gameController.mainShipWeapon = weapons;
+                gameController.mainShipShield = shields;
+            }
+            else
+            {
+                StartCoroutine(WriteWarning("Et falten parts necessaries"));
+            }
         }
     }
 
@@ -319,13 +383,14 @@ public class ModuleSpawner : MonoBehaviour
 
     public void StartCombat()
     {
-        if (gameController.isShipSaved())
+        SaveShip();
+        if (gameController.isInRogueLite)
         {
-            sceneController.LoadSceneSingle(2);
+            SceneManager.LoadScene(2, LoadSceneMode.Single);
         }
         else
         {
-            StartCoroutine(WriteWarning("Nau no guardada"));
+            SceneManager.LoadScene(5, LoadSceneMode.Single);
         }
     }
 
@@ -340,4 +405,55 @@ public class ModuleSpawner : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void spawnMainShip()
+    {
+        if (ship.Count > 0)
+            return;
+
+        if (gameController.mainShip.Count > 0)
+        {
+            this.ship.Clear();
+            this.shipPosition.Clear();
+            this.shipModules.Clear();
+            for (int i = 0; i < gameController.mainShip.Count; i++)
+            {
+                GameObject moduleTmp = Instantiate(gameController.mainShip[i], gameController.mainShipPosition[i], Quaternion.identity);
+                this.shipPosition.Add(gameController.mainShipPosition[i]);
+                this.ship.Add(gameController.mainShip[i]);
+                this.shipModules.Add(moduleTmp);
+                weapons = 0;
+                shields = 0;
+                if (gameController.mainShip[i].name == "Cabina")
+                {
+                    hasCabin = true;
+                }
+                else if (gameController.mainShip[i].name == "Motor")
+                {
+                    hasEngine = true;
+                }
+                else if (gameController.mainShip[i].name == "Aterratge")
+                {
+                    hasLanding = true;
+                }
+                else if (gameController.mainShip[i].name == "Canyo")
+                {
+                    weapons++;
+                }
+                else if (gameController.mainShip[i].name == "Escuts")
+                {
+                    shields++;
+                }
+            }
+        }
+    }
+
+    private void RefershMainAmounts()
+    {
+        for (int i = 0; i < gameController.moduleInventory.Count; i++)
+        {
+            modulesAmountText[i].text = gameController.moduleInventory[i].ToString();
+        }
+    }
+
 }
