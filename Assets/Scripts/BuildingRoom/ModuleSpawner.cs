@@ -286,7 +286,7 @@ public class ModuleSpawner : MonoBehaviour
 
     }
 
-    public void SaveShip()
+    public bool SaveShip()
     {
         if (gameController.isInRogueLite)
         {
@@ -300,10 +300,12 @@ public class ModuleSpawner : MonoBehaviour
                 gameController.ShipWeapon = weapons;
                 gameController.ShipShield = shields;
                 gameController.SaveShipFile();
+                return true;
             }
             else
             {
                 StartCoroutine(WriteWarning("Et falten parts necessaries"));
+                return false;
             }
         }
         else
@@ -317,10 +319,12 @@ public class ModuleSpawner : MonoBehaviour
                 }
                 gameController.mainShipWeapon = weapons;
                 gameController.mainShipShield = shields;
+                return true;
             }
             else
             {
                 StartCoroutine(WriteWarning("Et falten parts necessaries"));
+                return false;
             }
         }
     }
@@ -383,14 +387,16 @@ public class ModuleSpawner : MonoBehaviour
 
     public void StartCombat()
     {
-        SaveShip();
-        if (gameController.isInRogueLite)
+        if (SaveShip())
         {
-            SceneManager.LoadScene(2, LoadSceneMode.Single);
-        }
-        else
-        {
-            SceneManager.LoadScene(5, LoadSceneMode.Single);
+            if (gameController.isInRogueLite)
+            {
+                SceneManager.LoadScene(2, LoadSceneMode.Single);
+            }
+            else
+            {
+                SceneManager.LoadScene(5, LoadSceneMode.Single);
+            }
         }
     }
 
