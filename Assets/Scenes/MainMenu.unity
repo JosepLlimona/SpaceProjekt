@@ -397,6 +397,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1118845737362953547, guid: bb63534e21edbd642aa21f423ebdf891, type: 3}
+      propertyPath: modulesAmount.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1118845737362953547, guid: bb63534e21edbd642aa21f423ebdf891, type: 3}
+      propertyPath: modulesAmount.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1118845737362953547, guid: bb63534e21edbd642aa21f423ebdf891, type: 3}
+      propertyPath: modulesAmount.Array.data[2]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1118845737362953547, guid: bb63534e21edbd642aa21f423ebdf891, type: 3}
+      propertyPath: modulesAmount.Array.data[3]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1118845737362953547, guid: bb63534e21edbd642aa21f423ebdf891, type: 3}
+      propertyPath: modulesAmount.Array.data[4]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1118845737362953547, guid: bb63534e21edbd642aa21f423ebdf891, type: 3}
+      propertyPath: modulesAmount.Array.data[5]
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1411335176956007152, guid: bb63534e21edbd642aa21f423ebdf891, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
