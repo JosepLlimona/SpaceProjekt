@@ -938,6 +938,7 @@ MonoBehaviour:
   dialogueFile:
   - {fileID: 4900000, guid: 9376c08f14b7c7846b802770a455c767, type: 3}
   - {fileID: 4900000, guid: f074ae988a10cd1449f62e821a3273aa, type: 3}
+  i: 0
   dialogueController: {fileID: 843489750}
 --- !u!58 &46960295
 CircleCollider2D:
@@ -1367,6 +1368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueFile:
   - {fileID: 4900000, guid: d6344b37e0ee48b44ac04ec50b7e5eef, type: 3}
+  i: 0
   dialogueController: {fileID: 843489750}
 --- !u!1 &340842765
 GameObject:
@@ -1984,6 +1986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueFile:
   - {fileID: 4900000, guid: bfaf91df2d1b68246b674a45c725e8e4, type: 3}
+  i: 0
   dialogueController: {fileID: 843489750}
 --- !u!114 &843489750 stripped
 MonoBehaviour:
@@ -2108,6 +2111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueFile:
   - {fileID: 4900000, guid: b97b6264d3921194e9400ddbc5ba36fd, type: 3}
+  i: 0
   dialogueController: {fileID: 843489750}
 --- !u!58 &947812044
 CircleCollider2D:
@@ -8893,7 +8897,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueFile:
-  - {fileID: 4900000, guid: 5c7b69737a6729b4aa061ca73b1d4d58, type: 3}
+  - {fileID: 4900000, guid: 3044549f4783b3d42bd2ac9112db8dd1, type: 3}
+  i: 0
   dialogueController: {fileID: 843489750}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

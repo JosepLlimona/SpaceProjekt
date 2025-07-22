@@ -25,49 +25,49 @@ public class InventoryController : MonoBehaviour
     public PlayerController player;
 
     // Update is called once per frame
-    /*void Update()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.H))
         {
-            AddItem(items[0]);
+            AddItem(0);
             Debug.Log(GetAvailableSpace());
         }
         if (Input.GetKeyDown(KeyCode.J))
         {
-            AddItem(items[1]);
+            AddItem(1);
             Debug.Log(GetAvailableSpace());
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            AddItem(items[2]);
+            AddItem(2);
             Debug.Log(GetAvailableSpace());
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
-            AddItem(items[3]);
+            AddItem(3);
             Debug.Log(GetAvailableSpace());
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
-            AddItem(items[4]);
+            AddItem(4);
             Debug.Log(GetAvailableSpace());
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
-            AddItem(items[5]);
+            AddItem(5);
             Debug.Log(GetAvailableSpace());
         }
         if (Input.GetKeyDown(KeyCode.M))
         {
-            AddItem(items[6]);
+            AddItem(6);
             Debug.Log(GetAvailableSpace());
         }
         if (Input.GetKeyDown(KeyCode.N))
         {
-            AddItem(items[7]);
+            AddItem(7);
             Debug.Log(GetAvailableSpace());
         }
-    }*/
+    }
 
     public void AddItem(int itemIdx)
     {
@@ -120,7 +120,7 @@ public class InventoryController : MonoBehaviour
             itemIcon.transform.SetParent(spaces[GetAvailableSpace()].transform);
             itemIcon.GetComponent<RectTransform>().localPosition = Vector3.zero;
             itemIcon.GetComponent<RectTransform>().sizeDelta = new Vector2(40f, 40f);
-            itemIcon.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f,1f);
+            itemIcon.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 1f);
             itemIcon.AddComponent<Button>();
             itemIcon.GetComponent<Button>().onClick.AddListener(() => { UseObject(itemIcon, item); });
             itemIcon.AddComponent<PointerEnterHandler>();
@@ -211,7 +211,7 @@ public class InventoryController : MonoBehaviour
 
     int GetAvailableSpace()
     {
-        for(int i = 0; i< spaces.Count; i++)
+        for (int i = 0; i < spaces.Count; i++)
         {
             if (spaces[i].transform.childCount <= 0)
             {
@@ -243,7 +243,7 @@ public class InventoryController : MonoBehaviour
     {
         Debug.Log(item);
         item.GetComponent<Item>().Use(player.GetComponent<PlayerController>());
-        if(item.GetComponent<Item>().ReturnType() == "Consum")
+        if (item.GetComponent<Item>().ReturnType() == "Consum")
         {
             if (itemR.transform.childCount > 0)
             {
@@ -264,9 +264,9 @@ public class InventoryController : MonoBehaviour
                 Destroy(itemR);
             }
         }
-        else if(item.GetComponent<Item>().ReturnType() == "Gun")
+        else if (item.GetComponent<Item>().ReturnType() == "Gun")
         {
-            if(WeaponSlot.transform.childCount > 0)
+            if (WeaponSlot.transform.childCount > 0)
             {
                 Debug.Log("Hi ha un altre item :)");
                 UnequipWeapon(WeaponSlot.transform.GetChild(0).gameObject, WeaponSlot.transform.GetChild(0).gameObject.GetComponent<PointerEnterHandler>().item);
@@ -274,7 +274,7 @@ public class InventoryController : MonoBehaviour
             itemR.transform.SetParent(WeaponSlot.transform);
             itemR.GetComponent<RectTransform>().localPosition = Vector3.zero;
             itemR.GetComponent<Button>().onClick.RemoveAllListeners();
-            itemR.GetComponent<Button>().onClick.AddListener(() => { UnequipWeapon(itemR, item); }) ;
+            itemR.GetComponent<Button>().onClick.AddListener(() => { UnequipWeapon(itemR, item); });
             weaponBonusText.text = "+" + item.GetComponent<Item>().ReturnBonus() + " DMG";
             player.EquipWeapon("Gun", item.GetComponent<Item>().ReturnBonus());
         }
@@ -291,9 +291,9 @@ public class InventoryController : MonoBehaviour
             weaponBonusText.text = "+" + item.GetComponent<Item>().ReturnBonus() + " DMG";
             player.EquipWeapon("Sword", item.GetComponent<Item>().ReturnBonus());
         }
-        else if(item.GetComponent<Item>().ReturnType() == "Armour")
+        else if (item.GetComponent<Item>().ReturnType() == "Armour")
         {
-            if(ArmourSlot.transform.childCount > 0)
+            if (ArmourSlot.transform.childCount > 0)
             {
                 UnequipArmour(ArmourSlot.transform.GetChild(0).gameObject, ArmourSlot.transform.GetChild(0).gameObject.GetComponent<PointerEnterHandler>().item);
             }
@@ -306,7 +306,7 @@ public class InventoryController : MonoBehaviour
             int value = (int)char.GetNumericValue(num);
             value += item.GetComponent<Item>().ReturnBonus();
             armourBonusText.text = "+" + value + " DEF";
-            player.changeDefense(item.GetComponent<Item>().ReturnBonus()/10f);
+            player.changeDefense(item.GetComponent<Item>().ReturnBonus() / 10f);
         }
         else if (item.GetComponent<Item>().ReturnType() == "Feet")
         {
@@ -382,7 +382,7 @@ public class InventoryController : MonoBehaviour
         int value = (int)char.GetNumericValue(num);
         value -= item.GetComponent<Item>().ReturnBonus();
         armourBonusText.text = "+" + value + " DEF";
-        player.changeDefense(-(item.GetComponent<Item>().ReturnBonus()/10f));
+        player.changeDefense(-(item.GetComponent<Item>().ReturnBonus() / 10f));
     }
 
     public void changeItemVisualizer(GameObject item)
