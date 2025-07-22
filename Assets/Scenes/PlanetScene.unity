@@ -1485,6 +1485,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1120579817001972368, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3460798942539363491, guid: cdbd38e8e74abb74384a7f61fc79ffe5, type: 3}
       propertyPath: healthBar
       value: 
